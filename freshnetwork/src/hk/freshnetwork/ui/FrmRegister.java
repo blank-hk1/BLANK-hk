@@ -84,7 +84,7 @@ public class FrmRegister extends JDialog implements ActionListener {
 			this.setVisible(false);
 		else if(e.getSource()==this.btnOk){
 			String username=this.edtUserId.getText();
-			String gender1 = male.isSelected() ? "男" : "女";
+			String gender1 = male.isSelected()?"男" : "女";
 			String pwd1=new String(this.edtPwd.getPassword());
 			String pwd2=new String(this.edtPwd2.getPassword());
 			String phone=this.edtphone.getText();
@@ -92,10 +92,14 @@ public class FrmRegister extends JDialog implements ActionListener {
 			String city=combobox.getSelectedItem().toString();
 			ExampleUserManager sum = new ExampleUserManager();
 			try {
+				if(!male.isSelected()&&!female.isSelected()) {
+					JOptionPane.showMessageDialog(null, "未选择性别","错误",JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 				Beanuser_table user=sum.reg(username,gender1,pwd1,pwd2, phone,mail, city);
 				if(user!=null) {
 					this.setVisible(false);
-					JOptionPane.showMessageDialog(null, "注册成功","错误",JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "注册成功","成功",JOptionPane.INFORMATION_MESSAGE);
 				}
 				else {
 					JOptionPane.showMessageDialog(null, "注册失败","错误",JOptionPane.ERROR_MESSAGE);
