@@ -1,9 +1,10 @@
 package hk.freshnetwork.model;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 
 public class Beanuser_table {
-    public static Object currentLoginUser=null;
+    public static Beanuser_table currentLoginUser=null;
 	private int User_num;
     private String User_name;
     private boolean User_gender;
