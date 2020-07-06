@@ -23,6 +23,9 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import hk.freshnetwork.action.FreshNetUtil;
+import hk.freshnetwork.model.Beanadminfo;
+import hk.freshnetwork.model.Beancommodity_information;
+import hk.freshnetwork.model.Beanuser_table;
 import hk.freshnetwork.util.BaseException;
 
 
@@ -34,22 +37,20 @@ public class FrmMain extends JFrame implements ActionListener {
 	private JMenuBar menubar=new JMenuBar(); ;
     private JMenu fresh_back=new JMenu("生鲜后台管理");
     private JMenu Discount_back=new JMenu("优惠后台管理");
-    private JMenu User_back=new JMenu("用户管理");
+    private JMenu User_back=new JMenu("采购商品");
     private JMenu admin_person=new JMenu("更多");
     
-    private JMenu person_plan=new JMenu("生鲜后台管理");
-    private JMenu person_step=new JMenu("优惠后台管理");
+    private JMenu person_plan=new JMenu("商品推荐");
+    private JMenu person_step=new JMenu("评价商品");
     private JMenu person_static=new JMenu("用户管理");
     private JMenu person_more=new JMenu("个人中心");
     
-    private JMenuItem  menuItem_AddPlan=new JMenuItem("新建计划");
-    private JMenuItem  menuItem_DeletePlan=new JMenuItem("删除计划");
-    private JMenuItem  menuItem_AddStep=new JMenuItem("添加步骤");
-    private JMenuItem  menuItem_DeleteStep=new JMenuItem("删除步骤");
-    private JMenuItem  menuItem_startStep=new JMenuItem("开始步骤");
-    private JMenuItem  menuItem_finishStep=new JMenuItem("结束步骤");
-    private JMenuItem  menuItem_moveUpStep=new JMenuItem("步骤上移");
-    private JMenuItem  menuItem_moveDownStep=new JMenuItem("步骤下移");
+    private JMenuItem  Fresh_category=new JMenuItem("生鲜类别管理");
+    private JMenuItem  menu_manager=new JMenuItem("菜谱管理");
+    private JMenuItem  Fresh_Trade=new JMenuItem("商品管理");
+    private JMenuItem  Time_pro=new JMenuItem("限时促销管理");
+    private JMenuItem  Full_dis=new JMenuItem("满折优惠管理");
+    private JMenuItem  coupon=new JMenuItem("优惠券管理");
     
     private JMenuItem  person_modifyPwd=new JMenuItem("修改密码");
     private JMenuItem  person_modifyphone=new JMenuItem("修改手机号码");
@@ -66,37 +67,37 @@ public class FrmMain extends JFrame implements ActionListener {
 	private FrmLogin dlgLogin=null;
 	private JPanel statusBar = new JPanel();
 	
-	/*private Object tblPlanTitle[]=BeanPlan.tableTitles;
+	private Object tblPlanTitle[]=Beancommodity_information.tableTitles;
 	private Object tblPlanData[][];
 	DefaultTableModel tabPlanModel=new DefaultTableModel();
 	private JTable dataTablePlan=new JTable(tabPlanModel);
 	
 	
-	private Object tblStepTitle[]=BeanStep.tblStepTitle;
+	/*private Object tblStepTitle[]=BeanStep.tblStepTitle;
 	private Object tblStepData[][];
 	DefaultTableModel tabStepModel=new DefaultTableModel();
-	private JTable dataTableStep=new JTable(tabStepModel);
+	private JTable dataTableStep=new JTable(tabStepModel);*/
 	
-	private BeanPlan curPlan=null;
-	List<BeanPlan> allPlan=null;
-	List<BeanStep> planSteps=null;*/
-	/*private void reloadPlanTable(){//这是测试数据，需要用实际数替换
+	private Beancommodity_information curCommodity=null;
+	List<Beancommodity_information> allPlan=null;
+	List<Beancommodity_information> planSteps=null;
+	private void reloadPlanTable() throws BaseException{//这是测试数据，需要用实际数替换
 		try {
-			allPlan=PersonPlanUtil.planManager.loadAll();
+			allPlan=FreshNetUtil.comManager.loadcom();
 		} catch (BaseException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "错误",JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		tblPlanData =  new Object[allPlan.size()][BeanPlan.tableTitles.length];
+		tblPlanData =  new Object[allPlan.size()][Beancommodity_information.tableTitles.length];
 		for(int i=0;i<allPlan.size();i++){
-			for(int j=0;j<BeanPlan.tableTitles.length;j++)
+			for(int j=0;j<Beancommodity_information.tableTitles.length;j++)
 				tblPlanData[i][j]=allPlan.get(i).getCell(j);
 		}
 		tabPlanModel.setDataVector(tblPlanData,tblPlanTitle);
 		this.dataTablePlan.validate();
 		this.dataTablePlan.repaint();
 	}
-	private void reloadPlanStepTabel(int planIdx){
+	/*private void reloadPlanStepTabel(int planIdx){
 		if(planIdx<0) return;
 		curPlan=allPlan.get(planIdx);
 		try {
@@ -115,7 +116,7 @@ public class FrmMain extends JFrame implements ActionListener {
 		this.dataTableStep.validate();
 		this.dataTableStep.repaint();
 	}*/
-	public FrmMain(){
+	public FrmMain() throws BaseException{
 		dlgLogin=new FrmLogin(this,"生鲜海超登陆",true);
 		dlgLogin.setVisible(true);
 		if (Identity==1) {
@@ -123,14 +124,6 @@ public class FrmMain extends JFrame implements ActionListener {
 			this.setTitle("生鲜海超用户系统");
 			
 		    //菜单
-		    this.person_plan.add(this.menuItem_AddPlan); this.menuItem_AddPlan.addActionListener(this);
-		    this.person_plan.add(this.menuItem_DeletePlan); this.menuItem_DeletePlan.addActionListener(this);
-		    this.person_step.add(this.menuItem_AddStep); this.menuItem_AddStep.addActionListener(this);
-		    this.person_step.add(this.menuItem_DeleteStep); this.menuItem_DeleteStep.addActionListener(this);
-		    this.person_step.add(this.menuItem_startStep); this.menuItem_startStep.addActionListener(this);
-		    this.person_step.add(this.menuItem_finishStep); this.menuItem_finishStep.addActionListener(this);
-		    this.person_step.add(this.menuItem_moveUpStep); this.menuItem_moveUpStep.addActionListener(this);
-		    this.person_step.add(this.menuItem_moveDownStep); this.menuItem_moveDownStep.addActionListener(this);
 		    this.person_static.add(this.menuItem_static1); this.menuItem_static1.addActionListener(this);
 		    this.person_more.add(this.person_modifyPwd); this.person_modifyPwd.addActionListener(this);
 		    this.person_more.add(this.person_modifyphone); this.person_modifyphone.addActionListener(this);
@@ -144,8 +137,8 @@ public class FrmMain extends JFrame implements ActionListener {
 		    menubar.add(person_more);
 		    this.setJMenuBar(menubar);
 		    
-		    /*this.getContentPane().add(new JScrollPane(this.dataTablePlan), BorderLayout.WEST);
-		    this.dataTablePlan.addMouseListener(new MouseAdapter (){
+		    this.getContentPane().add(new JScrollPane(this.dataTablePlan), BorderLayout.WEST);
+		    /*this.dataTablePlan.addMouseListener(new MouseAdapter (){
 
 				@Override
 				public void mouseClicked(MouseEvent e) {
@@ -156,13 +149,13 @@ public class FrmMain extends JFrame implements ActionListener {
 					FrmMain.this.reloadPlanStepTabel(i);
 				}
 		    	
-		    });
-		    this.getContentPane().add(new JScrollPane(this.dataTableStep), BorderLayout.CENTER);
+		    });*/
+		    //this.getContentPane().add(new JScrollPane(this.dataTableStep), BorderLayout.CENTER);
 		    
-		    this.reloadPlanTable();*/
+		    this.reloadPlanTable();
 		    //状态栏
 		    statusBar.setLayout(new FlowLayout(FlowLayout.LEFT));
-		    JLabel label=new JLabel("您好");//修改成   您好！+登陆用户名
+		    JLabel label=new JLabel("您好          "+Beanuser_table.currentLoginUser.getUser_name());//修改成   您好！+登陆用户名
 		    statusBar.add(label);
 		    this.getContentPane().add(statusBar,BorderLayout.SOUTH);
 		    this.addWindowListener(new WindowAdapter(){   
@@ -177,15 +170,12 @@ public class FrmMain extends JFrame implements ActionListener {
 			this.setTitle("生鲜海超管理系统");
 			
 		    //菜单
-		    this.fresh_back.add(this.menuItem_AddPlan); this.menuItem_AddPlan.addActionListener(this);
-		    this.fresh_back.add(this.menuItem_DeletePlan); this.menuItem_DeletePlan.addActionListener(this);
-		    this.Discount_back.add(this.menuItem_AddStep); this.menuItem_AddStep.addActionListener(this);
-		    this.Discount_back.add(this.menuItem_DeleteStep); this.menuItem_DeleteStep.addActionListener(this);
-		    this.Discount_back.add(this.menuItem_startStep); this.menuItem_startStep.addActionListener(this);
-		    this.Discount_back.add(this.menuItem_finishStep); this.menuItem_finishStep.addActionListener(this);
-		    this.Discount_back.add(this.menuItem_moveUpStep); this.menuItem_moveUpStep.addActionListener(this);
-		    this.Discount_back.add(this.menuItem_moveDownStep); this.menuItem_moveDownStep.addActionListener(this);
-		    this.User_back.add(this.menuItem_static1); this.menuItem_static1.addActionListener(this);
+		    this.fresh_back.add(this.Fresh_category); this.Fresh_category.addActionListener(this);
+		    this.fresh_back.add(this.menu_manager); this.menu_manager.addActionListener(this);
+		    this.fresh_back.add(this.Fresh_Trade); this.Fresh_Trade.addActionListener(this);
+		    this.Discount_back.add(this.Time_pro);this.Time_pro.addActionListener(this);
+		    this.Discount_back.add(this.Full_dis);this.Full_dis.addActionListener(this);
+		    this.Discount_back.add(this.coupon);this.coupon.addActionListener(this);
 		    this.admin_person.add(this.admin_modifyPwd); this.admin_modifyPwd.addActionListener(this);
 		    this.admin_person.add(this.admin_add); this.admin_add.addActionListener(this);
 		    
@@ -213,7 +203,7 @@ public class FrmMain extends JFrame implements ActionListener {
 		    this.reloadPlanTable();*/
 		    //状态栏
 		    statusBar.setLayout(new FlowLayout(FlowLayout.LEFT));
-		    JLabel label=new JLabel("您好");//修改成   您好！+登陆用户名
+		    JLabel label=new JLabel("您好"+Beanadminfo.currentLoginadmin.getEmp_name());//修改成   您好！+登陆用户名
 		    statusBar.add(label);
 		    this.getContentPane().add(statusBar,BorderLayout.SOUTH);
 		    this.addWindowListener(new WindowAdapter(){   
@@ -343,6 +333,10 @@ public class FrmMain extends JFrame implements ActionListener {
 			FrmOpenVip dlg = new FrmOpenVip(this,"会员中心",true);
 			dlg.setVisible(true);
 	}
+		else if(e.getSource()==this.Fresh_category) {
+			FrmFreshcat dlg = new FrmFreshcat(this,"生鲜类别管理",true);
+			dlg.setVisible(true);
+		}
 	
   }
 }
