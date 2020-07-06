@@ -56,7 +56,7 @@ public class FrmUserPwd extends JDialog implements ActionListener{
 		String pwd=new String(this.edtPwd.getPassword());
 		if(e.getSource()==this.btnCancel) {
 			this.setVisible(false);
-		}			
+		}		
 		else if(e.getSource()==this.btnOk){
 			try {
 				FreshNetUtil.userManager.changePwd(Beanuser_table.currentLoginUser,new String(edtPwdOld.getText()),new String(edtPwd.getPassword()),new String(edtPwd2.getPassword()));
