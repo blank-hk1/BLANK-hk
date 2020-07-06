@@ -1,6 +1,11 @@
 package hk.freshnetwork.model;
 
+import hk.freshnetwork.action.FreshNetUtil;
+import hk.freshnetwork.util.BaseException;
+import hk.freshnetwork.util.BusinessException;
+
 public class Beancommodity_information {
+	public static final String[] tableTitles={"商品编号","类别名称","商品名称","商品单价","会员价","数量","详情"};
    private int Trade_number;
    private int Pro_number;
    private int chase_number;
@@ -11,6 +16,10 @@ public class Beancommodity_information {
    private int number;
    private String Specifications;
    private String details;
+   public String getFreshName() throws BaseException{
+	   String name = FreshNetUtil.freshManager.getFreshname(this.Category_number);
+	   return name;
+   }
 public int getTrade_number() {
 	return Trade_number;
 }
@@ -71,4 +80,14 @@ public String getDetails() {
 public void setDetails(String details) {
 	this.details = details;
 }
+ public String getCell(int col) throws BaseException{
+	if(col==0) return Integer.toString(this.Trade_number);
+	else if(col==1) return this.getFreshName();
+	else if(col==2) return this.Trade_name;
+	else if(col==3) return Float.toString(this.Price);
+	else if(col==4) return Float.toString(this.Member_price);
+	else if(col==5) return Integer.toString(this.number);
+	else if(col==6) return this.details;
+	else return "";
+ }
 }
