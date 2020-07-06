@@ -20,6 +20,7 @@ import javax.swing.JTextField;
 import hk.freshnetwork.control.ExampleUserManager;
 import hk.freshnetwork.control.ExampleadminManager;
 import hk.freshnetwork.model.Beanadminfo;
+import hk.freshnetwork.model.Beanfresh_information;
 import hk.freshnetwork.model.Beanuser_table;
 import hk.freshnetwork.util.BaseException;
 
