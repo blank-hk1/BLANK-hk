@@ -64,7 +64,6 @@ public class ExampleadminManager implements IadminManager{
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
 			pst.setString(1, Emp_name);
 			java.sql.ResultSet rs=pst.executeQuery();
-			System.out.println(Emp_name);
 			if(!rs.next()) throw new BusinessException("登录账号不存在");
 			Beanadminfo admin = new Beanadminfo();
 			admin.setEmp_number(rs.getInt(1));
