@@ -1,7 +1,7 @@
 package hk.freshnetwork.model;
 
 public class Beanfresh_information {
-	 public static Beanfresh_information currentLoginfresh=null;
+	public static Beanfresh_information currentLoginfresh=null;
 	public static final String[] tableTitles={"类别编号","类别名称","类别描述"};
     private int Category_number;
     private String Category_name;
