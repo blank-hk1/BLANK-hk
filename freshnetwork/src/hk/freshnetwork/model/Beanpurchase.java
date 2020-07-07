@@ -1,8 +1,16 @@
 package hk.freshnetwork.model;
 
 public class Beanpurchase {
+  public static final String[] tableTitles={"采购单编号","员工编号","采购数量","状态"};
   private int chase_number;
-  private int Emp_number;
+  private int Trade_number;
+  public int getTrade_number() {
+	return Trade_number;
+}
+public void setTrade_number(int trade_number) {
+	Trade_number = trade_number;
+}
+private int Emp_number;
   private int purchase_amount;
   private String chase_stat;
 public int getChase_number() {
@@ -28,5 +36,12 @@ public String getChase_stat() {
 }
 public void setChase_stat(String chase_stat) {
 	this.chase_stat = chase_stat;
+}
+public String getCell(int col){
+	if(col==0) return Integer.toString(this.getChase_number());
+	else if(col==1) return Integer.toString(this.getEmp_number());
+	else if(col==2) return Integer.toString(this.getPurchase_amount());
+	else if(col==3) return this.getChase_stat();
+	else return "";
 }
 }
