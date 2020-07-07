@@ -3,6 +3,7 @@ package hk.freshnetwork.model;
 import java.sql.Blob;
 
 public class Beanmenu_info {
+	public static final String[] tableTitles={"菜谱编号","菜谱名称","菜谱原料","步骤"};
     private int Menu_number;
     private String Menu_name;
     private String Menu_Materials;
@@ -37,5 +38,12 @@ public class Beanmenu_info {
 	}
 	public void setPicture(Blob picture) {
 		this.picture = picture;
+	}
+	public String getCell(int col){
+		if(col==0) return Integer.toString(this.getMenu_number());
+		else if(col==1) return this.getMenu_name();
+		else if(col==2) return this.getMenu_Materials();
+		else if(col==3) return this.getStep();
+		else return "";
 	}
 }
