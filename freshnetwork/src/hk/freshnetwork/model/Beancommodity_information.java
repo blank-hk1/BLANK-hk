@@ -5,7 +5,7 @@ import hk.freshnetwork.util.BaseException;
 import hk.freshnetwork.util.BusinessException;
 
 public class Beancommodity_information {
-	public static final String[] tableTitles={"商品编号","类别名称","商品名称","商品单价","会员价","数量","详情"};
+   public static final String[] tableTitles={"商品编号","类别名称","商品名称","商品单价","会员价","数量","详情"};
    private int Trade_number;
    private int Pro_number;
    private int chase_number;
