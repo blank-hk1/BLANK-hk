@@ -31,7 +31,6 @@ public class FrmFreshcat extends JDialog implements ActionListener{
 	private JButton btnAdd = new JButton("添加生鲜类别");
 	private JButton btnModify = new JButton("修改生鲜类别");
 	private JButton btnStop = new JButton("删除生鲜类别");
-	private JComboBox cmbState=new JComboBox(new String[]{"在库","已删除"});
 	private JTextField edtKeyword = new JTextField(10);
 	private JButton btnSearch = new JButton("查询");
 	private Object tblTitle[]=Beanfresh_information.tableTitles;
@@ -58,7 +57,7 @@ public class FrmFreshcat extends JDialog implements ActionListener{
 	}
 	private void searchreloadTable(){
 		try {
-			if (this.edtKeyword.getText()==null) {
+			if (this.edtKeyword.getText().equals("")) {
 				fresh = FreshNetUtil.freshManager.loadFresh();
 			}
 			else {
@@ -84,7 +83,6 @@ public class FrmFreshcat extends JDialog implements ActionListener{
 		toolBar.add(btnAdd);
 		toolBar.add(btnModify);
 		toolBar.add(btnStop);
-		toolBar.add(cmbState);
 		toolBar.add(edtKeyword);
 		toolBar.add(btnSearch);
 		
@@ -119,6 +117,7 @@ public class FrmFreshcat extends JDialog implements ActionListener{
 		if(e.getSource()==this.btnAdd){
 			FrmFreshAdd dlg=new FrmFreshAdd(this,"添加类别",true);
 			dlg.setVisible(true);
+			this.reloadTable();
 		}
 		else if(e.getSource()==this.btnModify){
 			int i=this.dataTable.getSelectedRow();
@@ -130,6 +129,7 @@ public class FrmFreshcat extends JDialog implements ActionListener{
 		    
 			FrmFreshModify dlg=new FrmFreshModify(this,"修改类别",true);
 			dlg.setVisible(true);
+			this.reloadTable();
 		}
 		else if(e.getSource()==this.btnStop){
 			int i=this.dataTable.getSelectedRow();
@@ -137,20 +137,10 @@ public class FrmFreshcat extends JDialog implements ActionListener{
 				JOptionPane.showMessageDialog(null,  "请选择类别","提示",JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			Beanfresh_information freshs=this.fresh.get(i);
-			if(!"在库".equals(freshs.getCategory_description())){
-				JOptionPane.showMessageDialog(null,  "当前类别没有‘在库’","提示",JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			if(JOptionPane.showConfirmDialog(this,"确定删除"+freshs.getCategory_name()+"吗？","确认",JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION){
-				freshs.setCategory_description("在库");
-				/*try {
-					FreshNetUtil.freshManager.modifyFresh(freshs);
-					this.reloadTable();
-				} catch (BaseException e1) {
-					JOptionPane.showMessageDialog(null, e1.getMessage(),"错误",JOptionPane.ERROR_MESSAGE);
-				}*/
-			}
+			freshs=this.fresh.get(i);
+			FreshNetUtil.freshManager.deleteFresh(freshs.getCategory_name());
+			JOptionPane.showMessageDialog(null,  "删除成功","提示",JOptionPane.INFORMATION_MESSAGE);
+			this.reloadTable();
 		}
 		else if(e.getSource()==this.btnSearch){
 			this.searchreloadTable();
