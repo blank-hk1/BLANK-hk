@@ -52,6 +52,9 @@ public class FrmMain extends JFrame implements ActionListener {
     private JMenuItem  Full_dis=new JMenuItem("满折优惠管理");
     private JMenuItem  coupon=new JMenuItem("优惠券管理");
     
+    private JMenuItem  chase_info=new JMenuItem("采购订单详情");
+    private JMenuItem  chase=new JMenuItem("采购商品");
+    
     private JMenuItem  person_modifyPwd=new JMenuItem("修改密码");
     private JMenuItem  person_modifyphone=new JMenuItem("修改手机号码");
     private JMenuItem  person_modifymail=new JMenuItem("修改邮箱");
@@ -176,6 +179,8 @@ public class FrmMain extends JFrame implements ActionListener {
 		    this.Discount_back.add(this.Time_pro);this.Time_pro.addActionListener(this);
 		    this.Discount_back.add(this.Full_dis);this.Full_dis.addActionListener(this);
 		    this.Discount_back.add(this.coupon);this.coupon.addActionListener(this);
+		    this.User_back.add(this.chase_info);this.chase_info.addActionListener(this);
+		    this.User_back.add(this.chase);this.chase.addActionListener(this);
 		    this.admin_person.add(this.admin_modifyPwd); this.admin_modifyPwd.addActionListener(this);
 		    this.admin_person.add(this.admin_add); this.admin_add.addActionListener(this);
 		    
@@ -336,6 +341,35 @@ public class FrmMain extends JFrame implements ActionListener {
 		else if(e.getSource()==this.Fresh_category) {
 			FrmFreshcat dlg = new FrmFreshcat(this,"生鲜类别管理",true);
 			dlg.setVisible(true);
+		}
+		else if(e.getSource()==this.menu_manager) {
+			FrmFreshMenu dlg = new FrmFreshMenu(this,"菜谱管理",true);
+			dlg.setVisible(true);
+		}
+		else if(e.getSource()==this.Fresh_Trade) {
+			FrmFreshCom dlg = null;
+			try {
+				dlg = new FrmFreshCom(this,"商品管理",true);
+			} catch (BaseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			dlg.setVisible(true);
+		}
+		else if(e.getSource()==this.chase_info) {
+			FrmFreshPurchase dlg = new FrmFreshPurchase(this,"采购订单详情",true);
+			dlg.setVisible(true);
+		}
+		else if(e.getSource()==this.chase) {
+			FrmAddPurchase dlg = null;
+			try {
+				dlg = new FrmAddPurchase(this,"采购商品",true);
+				dlg.setVisible(true);
+			} catch (BaseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
 		}
 	
   }
