@@ -1,8 +1,10 @@
 package hk.freshnetwork.model;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 public class Beantime_pro {
+	public static final String[] tableTitles={"限时促销编号","商品编号","促销价格","促销数量","开始时间","结束时间"};
     private int Pro_number;
     private int Trade_number;
     private float Pro_price;
@@ -44,5 +46,15 @@ public class Beantime_pro {
 	}
 	public void setProEnd_date(Timestamp proEnd_date) {
 		ProEnd_date = proEnd_date;
+	}
+	SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd");
+	public String getCell(int col){
+		if(col==0) return Integer.toString(this.getPro_number());
+		else if(col==1) return Integer.toString(this.getTrade_number());
+		else if(col==2) return Float.toString(this.getPro_price());
+		else if(col==3) return Integer.toString(this.getProm_number());
+		else if(col==4) return df.format(this.getProStart_date());
+		else if(col==5) return df.format(this.getProEnd_date());
+		else return "";
 	}
 }
