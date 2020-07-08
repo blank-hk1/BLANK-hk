@@ -371,6 +371,18 @@ public class FrmMain extends JFrame implements ActionListener {
 			}
 			
 		}
+		else if(e.getSource()==this.coupon) {
+			FrmFreshCoupon dlg = new FrmFreshCoupon(this,"优惠券管理",true);
+			dlg.setVisible(true);
+		}
+		else if(e.getSource()==this.Time_pro) {
+			FrmFreshTimepro dlg = new FrmFreshTimepro(this,"限时促销管理",true);
+			dlg.setVisible(true);
+		}
+		else if(e.getSource()==this.Full_dis) {
+			FrmFreshDis dlg = new FrmFreshDis(this,"满折优惠管理",true);
+			dlg.setVisible(true);
+		}
 	
   }
 }
