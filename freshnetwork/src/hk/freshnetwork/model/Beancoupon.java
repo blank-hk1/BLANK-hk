@@ -1,10 +1,11 @@
 package hk.freshnetwork.model;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 public class Beancoupon {
+	public static final String[] tableTitles={"优惠券编号","内容","适用金额","减免金额","开始日期","结束日期"};
    private int Cou_number;
-   private int ord_number;
    private String content;
    private float App_money;
    private float Ded_money;
@@ -15,12 +16,6 @@ public int getCou_number() {
 }
 public void setCou_number(int cou_number) {
 	Cou_number = cou_number;
-}
-public int getOrd_number() {
-	return ord_number;
-}
-public void setOrd_number(int ord_number) {
-	this.ord_number = ord_number;
 }
 public String getContent() {
 	return content;
@@ -51,5 +46,15 @@ public Timestamp getEnd_date() {
 }
 public void setEnd_date(Timestamp end_date) {
 	End_date = end_date;
+}
+SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd");
+public String getCell(int col){
+	if(col==0) return Integer.toString(this.Cou_number);
+	else if(col==1) return this.getContent();
+	else if(col==2) return Float.toString(this.getApp_money());
+	else if(col==3) return Float.toString(this.getDed_money());
+	else if(col==4) return df.format(this.getStart_date());
+	else if(col==5) return df.format(this.getEnd_date());
+	else return "";
 }
 }
