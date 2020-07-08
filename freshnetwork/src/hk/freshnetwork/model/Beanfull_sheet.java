@@ -1,8 +1,10 @@
 package hk.freshnetwork.model;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 public class Beanfull_sheet {
+	public static final String[] tableTitles={"满折编号","内容","适用商品数量","折扣","开始时间","结束时间"};
      private int Full_number;
      private String Full_content;
      private int App_number;
@@ -44,5 +46,15 @@ public class Beanfull_sheet {
 	}
 	public void setFulEnd_date(Timestamp fulEnd_date) {
 		FulEnd_date = fulEnd_date;
+	}
+	SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd");
+	public String getCell(int col){
+		if(col==0) return Integer.toString(this.getFull_number());
+		else if(col==1) return this.getFull_content();
+		else if(col==2) return Integer.toString(this.getApp_number());
+		else if(col==3) return Float.toString(this.getDiscount());
+		else if(col==4) return df.format(this.getFulStart_date());
+		else if(col==5) return df.format(this.getFulEnd_date());
+		else return "";
 	}
 }
