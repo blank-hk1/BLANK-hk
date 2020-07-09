@@ -55,7 +55,7 @@ public class ExamplefreshManager implements IfreshManager{
 		Connection conn=null;
 		try {
 			conn=DBUtil.getConnection();
-			String sql = "select * from fresh_information where Category_name = ?";		
+			String sql = "select * from fresh_information where Category_name = ?";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
 			pst.setString(1, Category_name);
 			java.sql.ResultSet rs=pst.executeQuery();			
