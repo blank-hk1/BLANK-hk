@@ -58,7 +58,7 @@ public class ExampleComMananger implements IcomManager{
 		Connection conn=null;
 		try {
 			conn=DBUtil.getConnection();
-			String sql = "select * from commodity_information where Trade_name = ?";		
+			String sql = "select * from commodity_information where Trade_name = ?";	
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
 			pst.setString(1, Trade_name);
 			java.sql.ResultSet rs=pst.executeQuery();			
@@ -67,6 +67,41 @@ public class ExampleComMananger implements IcomManager{
 				com.setTrade_name(Trade_name);
 				com.setPrice(rs.getFloat(5));
 				com.setMember_price(rs.getFloat(6));
+				fresh.add(com);
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+		finally{
+			if(conn!=null)
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+		return fresh;
+	}
+	public List<Beancommodity_information> searchComFresh(int Category_number)throws BaseException{
+		List<Beancommodity_information> fresh = new ArrayList<Beancommodity_information>();
+		Connection conn=null;
+		try {
+			conn=DBUtil.getConnection();
+			String sql = "select * from commodity_information where Category_number = ?";	
+			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.setInt(1, Category_number);
+			java.sql.ResultSet rs=pst.executeQuery();			
+			while(rs.next()) {
+				Beancommodity_information com = new Beancommodity_information();
+				com.setTrade_number(rs.getInt(1));
+				com.setCategory_number(rs.getInt(3));
+				com.setTrade_name(rs.getString(4));
+				com.setPrice(rs.getFloat(5));
+				com.setMember_price(rs.getFloat(6));
+				com.setNumber(rs.getInt(7));
+				com.setDetails(rs.getString(8));
 				fresh.add(com);
 			}
 		}catch (SQLException e) {
@@ -152,7 +187,7 @@ public class ExampleComMananger implements IcomManager{
 			float p = Float.parseFloat(price);
 			float m = Float.parseFloat(member_price);
 			int n=Integer.parseInt(number);
-			sql="update commodity_information set Trade_name= ?,Category_number= ?,Price=?,Member_price=?,number=?,Specifications=?,details=? where Trade_number=?";
+			sql="update commodity_information set Trade_name= ?,Category_number = ?,Price=?,Member_price=?,number=?,Specifications=?,details=? where Trade_number=?";
 			pst=conn.prepareStatement(sql);
 				pst.setString(1, Trade_name);
 				pst.setInt(2, c);
