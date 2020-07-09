@@ -4,6 +4,7 @@ import java.util.List;
 
 import hk.freshnetwork.model.Beancoupon;
 import hk.freshnetwork.model.Beanfull_sheet;
+import hk.freshnetwork.model.Beanrelation;
 import hk.freshnetwork.model.Beantime_pro;
 import hk.freshnetwork.util.BaseException;
 
@@ -23,5 +24,10 @@ public interface IcoupouManager {
 	public Beanfull_sheet RegFul(String Full_content,int App_number,Float Discount,String FulStart_date,String FulEnd_date) throws BaseException;
 	public void modifyFul(int Full_number,String Full_content,int App_number,Float Discount,String FulStart_date,String FulEnd_date) throws BaseException;
 	public void deleteFul(int Full_number);
+	public void deleteFulCom(int Full_number);
+	public void modifyFulCom(int Full_number,int Trade_number) throws BaseException;
+	public Beanrelation RegFulCom(int Ful_number,int Trade_number,String FulStart_date,String FulEnd_date) throws BaseException;
+	public List<Beanrelation> loadDisComSearch(int Full_number)throws BaseException;
+	public List<Beanrelation> loadDisCom()throws BaseException;
 	
 }
