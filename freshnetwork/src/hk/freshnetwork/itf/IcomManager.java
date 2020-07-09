@@ -13,4 +13,5 @@ public interface IcomManager {
 	public void modifyCom(String Trade_name,String category_number,String price,String member_price,String number,String Specifications,String details) throws BaseException;
 	public void deleteCom(String Trade_name);
 	public List<Beancommodity_information> loadcompur() throws BaseException;
+	public List<Beancommodity_information> searchComFresh(int Category_number) throws BaseException;
 }
