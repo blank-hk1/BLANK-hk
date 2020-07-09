@@ -14,6 +14,7 @@ import hk.freshnetwork.itf.IcoupouManager;
 import hk.freshnetwork.model.Beancoupon;
 import hk.freshnetwork.model.Beanfresh_information;
 import hk.freshnetwork.model.Beanfull_sheet;
+import hk.freshnetwork.model.Beanrelation;
 import hk.freshnetwork.model.Beantime_pro;
 import hk.freshnetwork.ui.FrmFreshcat;
 import hk.freshnetwork.util.BaseException;
@@ -590,6 +591,172 @@ public class ExamplecoupouManager implements IcoupouManager{
 			String str = null;
 			conn=DBUtil.getConnection();
 			String sql="delete from full_sheet where Full_number = ?";
+			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.setInt(1, Full_number);
+			pst.execute();
+		    pst.close();
+		}catch (SQLException e) {
+			e.printStackTrace();
+
+		}
+		finally{
+			if(conn!=null)
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+	}
+	public List<Beanrelation> loadDisCom()throws BaseException{
+		List<Beanrelation> Ful = new ArrayList<Beanrelation>();
+		Connection conn=null;
+		try {
+			conn=DBUtil.getConnection();
+			String sql = "select * from relation";		
+			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			java.sql.ResultSet rs=pst.executeQuery();					
+			while(rs.next()) {
+				Beanrelation dis = new Beanrelation();
+				dis.setFul_Full_number(rs.getInt(1));
+				dis.setCom_Trade_number(rs.getInt(2));
+				dis.setFulStart_date(rs.getTimestamp(3));
+				dis.setFulEnd_date(rs.getTimestamp(4));
+				Ful.add(dis);
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+		finally{
+			if(conn!=null)
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+		return Ful;		
+	}
+	public List<Beanrelation> loadDisComSearch(int Full_number)throws BaseException{
+		List<Beanrelation> Ful = new ArrayList<Beanrelation>();
+		Connection conn=null;
+		try {
+			conn=DBUtil.getConnection();
+			String sql = "select * from relation where Ful_Full_number = ?";		
+			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.setInt(1, Full_number);
+			java.sql.ResultSet rs=pst.executeQuery();					
+			while(rs.next()) {
+				Beanrelation dis = new Beanrelation();
+				dis.setFul_Full_number(rs.getInt(1));
+				dis.setCom_Trade_number(rs.getInt(2));
+				dis.setFulStart_date(rs.getTimestamp(3));
+				dis.setFulEnd_date(rs.getTimestamp(4));
+				Ful.add(dis);
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+		finally{
+			if(conn!=null)
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+		return Ful;		
+	}
+	public Beanrelation RegFulCom(int Ful_number,int Trade_number,String FulStart_date,String FulEnd_date) throws BaseException{
+		Connection conn=null;
+		try {
+			conn=DBUtil.getConnection();
+			SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd");
+			java.sql.Date Start_begin = null;
+			java.sql.Date End_pro = null;
+			try {
+				Start_begin = new java.sql.Date(df.parse(FulStart_date).getTime());
+			}catch(ParseException e1){
+				e1.printStackTrace();
+			}
+			try {
+				End_pro = new java.sql.Date(df.parse(FulEnd_date).getTime());
+			}catch(ParseException e1){
+				e1.printStackTrace();
+			}
+			String sql="insert into relation(Ful_Full_number,Com_Trade_number,FulStart_date,FulEnd_date) values(?,?,?,?)";
+			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.setInt(1, Ful_number);
+			pst.setInt(2, Trade_number);
+			pst.setTimestamp(3, new java.sql.Timestamp(Start_begin.getTime()));
+			pst.setTimestamp(4, new java.sql.Timestamp(End_pro.getTime()));
+			Beanrelation cou = new Beanrelation();
+			cou.setCom_Trade_number(Trade_number);
+			cou.setFulStart_date(new java.sql.Timestamp(Start_begin.getTime()));
+			cou.setFulEnd_date(new java.sql.Timestamp(End_pro.getTime()));
+			pst.execute();
+			pst.close();
+			
+			return cou;
+		}catch (SQLException e) {
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+		finally{
+			if(conn!=null)
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+	}
+	public void modifyFulCom(int Full_number,int Trade_number) throws BaseException{
+		// TODO Auto-generated method stub
+		Connection conn=null;
+		try {
+			conn=DBUtil.getConnection();
+			String sql = "select * from commodity_information where Trade_number = ?";
+			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.setInt(1,Trade_number);
+			java.sql.ResultSet rs=pst.executeQuery();
+			if(!rs.next()) {
+				throw new BusinessException("不存在该商品");
+			}
+			rs.close();
+			pst.close();
+				sql="update relation set Com_Trade_number = ? where Ful_Full_number =?";
+				pst=conn.prepareStatement(sql);
+				pst.setInt(1, Trade_number);
+				pst.setInt(2, Full_number);
+				pst.execute();
+				pst.close();		
+		}catch (SQLException e) {
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+		finally{
+			if(conn!=null)
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+		
+	}
+	public void deleteFulCom(int Full_number){
+		Connection conn=null;
+		try {
+			conn=DBUtil.getConnection();
+			String sql="delete from relation where Ful_Full_number = ?";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
 			pst.setInt(1, Full_number);
 			pst.execute();
