@@ -1,6 +1,7 @@
 package hk.freshnetwork.model;
 
 public class Beanadminfo {
+	public static final String[] tableTitles={"订单编号","用户编号","地址编号","优惠券编号","原始金额"};
     public static Beanadminfo currentLoginadmin=null;
 	private int Emp_number;
     private String Emp_name;
