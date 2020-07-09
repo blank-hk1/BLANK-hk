@@ -1,6 +1,9 @@
 package hk.freshnetwork.model;
 
+import hk.freshnetwork.util.BaseException;
+
 public class Beanorder_details {
+	 public static final String[] tableTitles= {"商品编号","满折编号","数量","折扣","价格"};
       private int ord_ord_number;
       private int Com_Trade_number;
       private int Ful_Full_number;
@@ -43,4 +46,12 @@ public class Beanorder_details {
 	public void setSet_money(float set_money) {
 		this.set_money = set_money;
 	}
+	 public String getCell(int col) throws BaseException{
+			if(col==0) return Integer.toString(this.getCom_Trade_number());
+			else if(col==1) return Integer.toString(this.getFul_Full_number());
+			else if(col==2) return Integer.toString(this.getPur_number());
+			else if(col==3) return Float.toString(this.getDiscount());
+			else if(col==4) return Float.toString(this.getSet_money());
+			else return "";
+		 }
 }
