@@ -1,9 +1,11 @@
 package hk.freshnetwork.model;
 
+import hk.freshnetwork.util.BaseException;
+
 public class Beanaddlist {
+	 public static final String[] tableTitles={"地址编号","用户编号","省","市","区","地址","联系人","电话"};
      private int add_number;
      private int User_num;
-     private int ord_number;
      private String sheng;
      private String shi;
      private String qu;
@@ -21,12 +23,6 @@ public class Beanaddlist {
 	}
 	public void setUser_num(int user_num) {
 		User_num = user_num;
-	}
-	public int getOrd_number() {
-		return ord_number;
-	}
-	public void setOrd_number(int ord_number) {
-		this.ord_number = ord_number;
 	}
 	public String getSheng() {
 		return sheng;
@@ -64,4 +60,15 @@ public class Beanaddlist {
 	public void setCon_phone(String con_phone) {
 		this.con_phone = con_phone;
 	}
+	public String getCell(int col) throws BaseException{
+		if(col==0) return Integer.toString(this.add_number);
+		else if(col==1) return Integer.toString(this.User_num);
+		else if(col==2) return this.getSheng();
+		else if(col==3) return this.getShi();
+		else if(col==4) return this.getQu();
+		else if(col==5) return this.getAddress();
+		else if(col==6) return this.getContacts();
+		else if(col==7) return this.getCon_phone();
+		else return "";
+	 }
 }
