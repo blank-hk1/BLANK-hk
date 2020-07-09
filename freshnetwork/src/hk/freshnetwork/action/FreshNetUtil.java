@@ -4,8 +4,10 @@ import hk.freshnetwork.control.ExampleUserManager;
 import hk.freshnetwork.control.ExampleadminManager;
 import hk.freshnetwork.control.ExamplecoupouManager;
 import hk.freshnetwork.control.ExamplefreshManager;
+import hk.freshnetwork.control.ExampleAddressMannager;
 import hk.freshnetwork.control.ExampleComMananger;
 import hk.freshnetwork.control.ExamplePurchaseManager;
+import hk.freshnetwork.itf.IAddressManager;
 import hk.freshnetwork.itf.IUserManager;
 import hk.freshnetwork.itf.IadminManager;
 import hk.freshnetwork.itf.IcomManager;
@@ -20,4 +22,5 @@ public class FreshNetUtil {
 	public static IcomManager comManager=  new ExampleComMananger();
 	public static IpurchaseManager purchaseManager=  new ExamplePurchaseManager();
 	public static IcoupouManager couponManager=  new ExamplecoupouManager();
+	public static IAddressManager addressManager = new ExampleAddressMannager();
 }
