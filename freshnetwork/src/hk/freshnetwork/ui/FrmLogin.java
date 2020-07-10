@@ -23,6 +23,7 @@ import hk.freshnetwork.action.FreshNetUtil;
 import hk.freshnetwork.control.ExampleUserManager;
 import hk.freshnetwork.control.ExampleadminManager;
 import hk.freshnetwork.model.Beanadminfo;
+import hk.freshnetwork.model.Beanorder_form;
 import hk.freshnetwork.model.Beanuser_table;
 import hk.freshnetwork.util.BaseException;
 
@@ -30,6 +31,7 @@ import hk.freshnetwork.util.BaseException;
 
 
 public class FrmLogin extends JDialog implements ActionListener {
+	public static int ordid;
 	private JPanel toolBar = new JPanel();
 	private JPanel workPane = new JPanel();
 	private JButton btnCancel = new JButton("退出");
@@ -94,6 +96,10 @@ public class FrmLogin extends JDialog implements ActionListener {
 						Beanuser_table.currentLoginUser= FreshNetUtil.userManager.login(username, pwd);
 						this.setVisible(false);
 						FrmMain.Identity=1;
+						//Beanorder_form form = FreshNetUtil.orderManager.Regordform(Beanuser_table.currentLoginUser.getUser_num());
+						//ordid=form.getOrd_number();
+						//System.out.println(ordid);
+						//FrmMain.fflag=0;
 					}
 					else {
 						JOptionPane.showMessageDialog(null,"密码错误","错误提示ʾ",JOptionPane.ERROR_MESSAGE);
