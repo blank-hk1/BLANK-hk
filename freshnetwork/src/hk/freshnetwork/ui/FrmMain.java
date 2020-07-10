@@ -3,6 +3,7 @@ package hk.freshnetwork.ui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,6 +13,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -24,6 +26,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import hk.freshnetwork.action.FreshNetUtil;
+import hk.freshnetwork.model.BeanShopping;
 import hk.freshnetwork.model.Beanadminfo;
 import hk.freshnetwork.model.Beancommodity_information;
 import hk.freshnetwork.model.Beanfresh_information;
@@ -35,8 +38,9 @@ import hk.freshnetwork.util.BaseException;
 
 public class FrmMain extends JFrame implements ActionListener {
 	public static int Identity;
+	public static int fflag=0;
 	private static final long serialVersionUID = 1L;
-	private JMenuBar menubar=new JMenuBar(); ;
+	private JMenuBar menubar=new JMenuBar();
     private JMenu fresh_back=new JMenu("生鲜后台管理");
     private JMenu Discount_back=new JMenu("优惠后台管理");
     private JMenu User_back=new JMenu("采购商品");
@@ -46,7 +50,10 @@ public class FrmMain extends JFrame implements ActionListener {
     private JMenu person_step=new JMenu("消费记录");
     private JMenu person_static=new JMenu("购物车");
     private JMenu person_more=new JMenu("个人中心");
-    private JMenu person_add=new JMenu("添加至购物车");
+    private JLabel blank=new JLabel("                                                                                                                                                                                                                                                                                                                              ");
+    private JButton person_add=new JButton("添加至购物车");
+    private JButton person_buy = new JButton("下单");
+    private JButton person_delete = new JButton("删除该商品");
     
     private JMenuItem  Fresh_category=new JMenuItem("生鲜类别管理");
     private JMenuItem  menu_manager=new JMenuItem("菜谱管理");
@@ -78,20 +85,24 @@ public class FrmMain extends JFrame implements ActionListener {
 	private Object tblPlanTitle[]=Beanfresh_information.tableTitles;
 	private Object tblPlanData[][];
 	private Object tblcomTitle[]=Beancommodity_information.tableTitles;
+	private Object tblOrdTitle[]=BeanShopping.tableTitles;
+	public static Beancommodity_information details=null;
+	public static BeanShopping shops=null;
 	DefaultTableModel tabPlanModel=new DefaultTableModel();
 	DefaultTableModel tabComModel=new DefaultTableModel();
+	DefaultTableModel tabOrdModel=new DefaultTableModel();
 	private JTable dataTablePlan=new JTable(tabPlanModel);
 	private JTable datacomPlan=new JTable(tabComModel);
-	
+	private JTable dataOrdPlan=new JTable(tabOrdModel);
 	
 	/*private Object tblStepTitle[]=BeanStep.tblStepTitle;
 	private Object tblStepData[][];
 	DefaultTableModel tabStepModel=new DefaultTableModel();
 	private JTable dataTableStep=new JTable(tabStepModel);*/
 	
-	private Beanfresh_information curCommodity=null;
 	List<Beanfresh_information> allPlan=null;
 	List<Beancommodity_information> planSteps=null;
+	public List<BeanShopping> orddetails=null;
 	private void reloadPlanTable() throws BaseException{//这是测试数据，需要用实际数替换
 		try {
 			allPlan=FreshNetUtil.freshManager.loadFresh();
@@ -121,13 +132,30 @@ public class FrmMain extends JFrame implements ActionListener {
 		for(int i=0;i<planSteps.size();i++){
 			for(int j=0;j<Beancommodity_information.tableTitles.length;j++)
 				tblStepData[i][j]=planSteps.get(i).getCell(j);
-		}
-		
+		}		
 		tabComModel.setDataVector(tblStepData,tblcomTitle);
 		this.datacomPlan.validate();
 		this.datacomPlan.repaint();
 	}
-	
+	private void reloadShopCart(int commoditys) throws BaseException{
+		if(commoditys<0) return;
+		//Beancommodity_information details = planSteps.get(commodity);
+		try {
+			orddetails = FreshNetUtil.orderManager.loadOrd();
+		}catch (BaseException e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "错误",JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		Object[][] tblComData = new Object[orddetails.size()][BeanShopping.tableTitles.length];
+		for(int i=0;i<orddetails.size();i++){
+			for(int j=0;j<BeanShopping.tableTitles.length;j++)
+				tblComData[i][j]=orddetails.get(i).getCell(j);
+		}
+		
+		tabOrdModel.setDataVector(tblComData,tblOrdTitle);
+		this.dataOrdPlan.validate();
+		this.dataOrdPlan.repaint();
+	}
 	public FrmMain() throws BaseException{
 		dlgLogin=new FrmLogin(this,"生鲜海超登陆",true);
 		dlgLogin.setVisible(true);
@@ -144,11 +172,34 @@ public class FrmMain extends JFrame implements ActionListener {
 		    this.person_more.add(this.person_openvip); this.person_openvip.addActionListener(this);
 		    this.person_more.add(this.person_addlist); this.person_addlist .addActionListener(this);
 		    
+		    
+		    person_buy.setFont(new Font(Font.DIALOG,Font.BOLD,20));
+		    person_plan.setFont(new Font(Font.DIALOG,Font.BOLD,20));
+		    person_step.setFont(new Font(Font.DIALOG,Font.BOLD,20));
+		    person_static.setFont(new Font(Font.DIALOG,Font.BOLD,20));
+		    person_delete.setFont(new Font(Font.DIALOG,Font.BOLD,20));
+		    person_add.setFont(new Font(Font.DIALOG,Font.BOLD,20));
+		    person_more.setFont(new Font(Font.DIALOG,Font.BOLD,20));
+		    
+		    person_buy.setBorderPainted(false);
+		    person_plan.setBorderPainted(false);
+		    person_step.setBorderPainted(false);
+		    person_static.setBorderPainted(false);
+		    person_delete.setBorderPainted(false);
+		    person_add.setBorderPainted(false);
+		    person_more.setBorderPainted(false);
+		    
 		    menubar.add(person_plan);
 		    menubar.add(person_step);
 		    menubar.add(person_static);
 		    menubar.add(person_more);
 		    menubar.add(person_add);
+		    menubar.add(blank);
+		    menubar.add(person_buy);
+		    menubar.add(person_delete);
+		    this.person_add.addActionListener(this);
+		    this.person_buy.addActionListener(this);
+		    this.person_delete.addActionListener(this);
 		    this.setJMenuBar(menubar);
 		    
 		    JScrollPane store = new JScrollPane(this.dataTablePlan);
@@ -172,8 +223,25 @@ public class FrmMain extends JFrame implements ActionListener {
 				}
 		    	
 		    });
+		    this.datacomPlan.addMouseListener(new MouseAdapter (){
+
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					int i=FrmMain.this.datacomPlan.getSelectedRow();
+					if(i<0) {
+						return;
+					}
+					try {
+						FrmMain.this.reloadShopCart(i);
+					} catch (BaseException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+		    	
+		    });
 		    this.getContentPane().add(new JScrollPane(this.datacomPlan), BorderLayout.CENTER);
-		    
+		    this.getContentPane().add(new JScrollPane(this.dataOrdPlan), BorderLayout.EAST);
 		    this.reloadPlanTable();
 		    //状态栏
 		    statusBar.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -241,95 +309,6 @@ public class FrmMain extends JFrame implements ActionListener {
 		
 	}
 	public void actionPerformed(ActionEvent e) {
-		/*if(e.getSource()==this.menuItem_AddPlan){
-			FrmAddPlan dlg=new FrmAddPlan(this,"添加计划",true);
-			dlg.setVisible(true);
-		}
-		else if(e.getSource()==this.menuItem_DeletePlan){
-			if(this.curPlan==null) {
-				JOptionPane.showMessageDialog(null, "请选择计划", "错误",JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			try {
-				PersonPlanUtil.planManager.deletePlan(this.curPlan);
-			} catch (BaseException e1) {
-				JOptionPane.showMessageDialog(null, e1.getMessage(), "错误",JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-		}
-		else if(e.getSource()==this.menuItem_AddStep){
-			FrmAddStep dlg=new FrmAddStep(this,"添加步骤",true);
-			dlg.plan=curPlan;
-			dlg.setVisible(true);
-		}
-		else if(e.getSource()==this.menuItem_DeleteStep){
-			int i=FrmMain.this.dataTableStep.getSelectedRow();
-			if(i<0) {
-				JOptionPane.showMessageDialog(null, "请选择步骤", "错误",JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			try {
-				PersonPlanUtil.stepManager.deleteStep(this.planSteps.get(i));
-			} catch (BaseException e1) {
-				JOptionPane.showMessageDialog(null, e1.getMessage(), "错误",JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-		}
-		else if(e.getSource()==this.menuItem_startStep){
-			int i=FrmMain.this.dataTableStep.getSelectedRow();
-			if(i<0) {
-				JOptionPane.showMessageDialog(null, "请选择步骤", "错误",JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			try {
-				FreshNetUtil.stepManager.startStep(this.planSteps.get(i));
-			} catch (BaseException e1) {
-				JOptionPane.showMessageDialog(null, e1.getMessage(), "错误",JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-		}
-		else if(e.getSource()==this.menuItem_finishStep){
-			int i=FrmMain.this.dataTableStep.getSelectedRow();
-			if(i<0) {
-				JOptionPane.showMessageDialog(null, "请选择步骤", "错误",JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			try {
-				FreshNetUtil.stepManager.finishStep(this.planSteps.get(i));
-			} catch (BaseException e1) {
-				JOptionPane.showMessageDialog(null, e1.getMessage(), "错误",JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-		}
-		else if(e.getSource()==this.menuItem_moveUpStep){
-			int i=FrmMain.this.dataTableStep.getSelectedRow();
-			if(i<0) {
-				JOptionPane.showMessageDialog(null, "请选择步骤", "错误",JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			try {
-				FreshNetUtil.stepManager.moveUp(this.planSteps.get(i));
-			} catch (BaseException e1) {
-				JOptionPane.showMessageDialog(null, e1.getMessage(), "错误",JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-		}
-		else if(e.getSource()==this.menuItem_moveDownStep){
-			int i=FrmMain.this.dataTableStep.getSelectedRow();S
-			if(i<0) {
-				JOptionPane.showMessageDialog(null, "请选择步骤", "错误",JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			try {
-				FreshNetUtil.stepManager.moveDown(this.planSteps.get(i));
-			} catch (BaseException e1) {
-				JOptionPane.showMessageDialog(null, e1.getMessage(), "错误",JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-		}
-		else if(e.getSource()==this.menuItem_static1){
-			
-		}*/
 		if(e.getSource()==this.admin_modifyPwd){
 			FrmModifyPwd dlg=new FrmModifyPwd(this,"密码修改",true);
 			dlg.setVisible(true);
@@ -357,7 +336,7 @@ public class FrmMain extends JFrame implements ActionListener {
 		else if(e.getSource()==this.person_openvip) {
 			FrmOpenVip dlg = new FrmOpenVip(this,"会员中心",true);
 			dlg.setVisible(true);
-	}
+	    }
 		else if(e.getSource()==this.Fresh_category) {
 			FrmFreshcat dlg = new FrmFreshcat(this,"生鲜类别管理",true);
 			dlg.setVisible(true);
@@ -416,6 +395,48 @@ public class FrmMain extends JFrame implements ActionListener {
 		else if(e.getSource()==this.Dis_Com) {
 			FrmDisCom dlg = new FrmDisCom(this,"满折商品关联管理",true);
 			dlg.setVisible(true);
+		}
+		else if(e.getSource()==this.person_add) {
+			int i=this.datacomPlan.getSelectedRow();
+			if(i<0) {
+				JOptionPane.showMessageDialog(null,  "请选择要购买的商品","提示",JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			details=this.planSteps.get(i);			
+			FrmOrderCom dlg=new FrmOrderCom(this,"添加至购物车",true);
+			dlg.setVisible(true);
+			try {
+				this.reloadShopCart(i);
+			} catch (BaseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		else if(e.getSource()==this.person_buy) {
+			FrmShopping dlg = null;
+			try {
+				dlg = new FrmShopping(this,"下单",true);
+			} catch (BaseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			dlg.setVisible(true);
+		}
+		else if(e.getSource()==this.person_delete) {
+			int i=this.dataOrdPlan.getSelectedRow();
+			if(i<0) {
+				JOptionPane.showMessageDialog(null,  "请选择要删除的商品","提示",JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			shops=this.orddetails.get(i);
+			FreshNetUtil.orderManager.deleteShop(shops.getCom_Trade_number());
+			JOptionPane.showMessageDialog(null,  "删除成功","提示",JOptionPane.INFORMATION_MESSAGE);
+			try {
+				this.reloadShopCart(i);
+			} catch (BaseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
   }
 }
