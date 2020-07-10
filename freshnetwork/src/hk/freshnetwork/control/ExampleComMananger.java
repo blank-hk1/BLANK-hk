@@ -96,6 +96,7 @@ public class ExampleComMananger implements IcomManager{
 			while(rs.next()) {
 				Beancommodity_information com = new Beancommodity_information();
 				com.setTrade_number(rs.getInt(1));
+				com.setPro_number(rs.getInt(2));
 				com.setCategory_number(rs.getInt(3));
 				com.setTrade_name(rs.getString(4));
 				com.setPrice(rs.getFloat(5));
@@ -272,5 +273,34 @@ public class ExampleComMananger implements IcomManager{
 				}
 		}
 		return fresh;
+	}
+	public float searchCuxiao(int Trade_number,float price){
+		float cx = 0;
+		Connection conn=null;
+		try {
+			conn=DBUtil.getConnection();
+			String sql = "select * from time_pro where Trade_number = ?";			
+			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.setInt(1, Trade_number);
+			java.sql.ResultSet rs=pst.executeQuery();			
+			if(rs.next()) {
+				cx=rs.getFloat(3);
+			}
+			else {
+				cx=price;
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		finally{
+			if(conn!=null)
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+		return cx;
 	}
 }
