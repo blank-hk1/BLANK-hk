@@ -301,6 +301,7 @@ public class ExamplecoupouManager implements IcoupouManager{
 			SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd");
 			java.sql.Date Start_begin = null;
 			java.sql.Date End_pro = null;
+			int t=0;
 			try {
 				Start_begin = new java.sql.Date(df.parse(ProStart_date).getTime());
 			}catch(ParseException e1){
@@ -326,7 +327,18 @@ public class ExamplecoupouManager implements IcoupouManager{
 			cou.setProEnd_date(new java.sql.Timestamp(End_pro.getTime()));
 			pst.execute();
 			pst.close();
-			
+			sql = "select Pro_number from time_pro where Trade_number = ?";
+			pst=conn.prepareStatement(sql);
+			pst.setInt(1,Trade_number);
+			java.sql.ResultSet rs=pst.executeQuery();
+			if(rs.next()) {
+				t= rs.getInt(1);
+			}
+			sql = "update commodity_information set Pro_number = ? where Trade_number = ?";
+			pst=conn.prepareStatement(sql);
+			pst.setInt(1, t);
+			pst.setInt(2, Trade_number);
+			pst.execute();
 			return cou;
 		}catch (SQLException e) {
 			e.printStackTrace();
