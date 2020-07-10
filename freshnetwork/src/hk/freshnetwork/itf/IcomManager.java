@@ -14,4 +14,5 @@ public interface IcomManager {
 	public void deleteCom(String Trade_name);
 	public List<Beancommodity_information> loadcompur() throws BaseException;
 	public List<Beancommodity_information> searchComFresh(int Category_number) throws BaseException;
+	public float searchCuxiao(int Trade_number,float price);
 }
