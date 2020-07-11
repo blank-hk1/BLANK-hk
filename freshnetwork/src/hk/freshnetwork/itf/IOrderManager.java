@@ -5,6 +5,8 @@ import java.util.List;
 import hk.freshnetwork.model.BeanShopping;
 import hk.freshnetwork.model.Beanaddlist;
 import hk.freshnetwork.model.Beancoupon;
+import hk.freshnetwork.model.Beangoods_eva;
+import hk.freshnetwork.model.Beanorder_details;
 import hk.freshnetwork.model.Beanorder_form;
 import hk.freshnetwork.model.Beantime_pro;
 import hk.freshnetwork.util.BaseException;
@@ -19,8 +21,10 @@ public interface IOrderManager {
 	public Beanorder_form CreatOrder(int User_num,int add_number,int Cou_number,float ori_money,float set_money);
 	public void deleteAllShop(int user_num);
 	public void updateCom(int username) throws BusinessException;
-	public List<Beanorder_form> loadRecords(int Usernum)throws BaseException;
-	public List<Beanorder_form> loadRecordStat(int Usernum,String state)throws BaseException;
+	public List<Beanorder_details> loadRecords(int Usernum)throws BaseException;
 	public Beancoupon ReadCouName(int Cou_number) throws BaseException;
 	public Beanaddlist ReadAddName(int add_number) throws BaseException;
+	public Beangoods_eva Addeva(int Usernum,int Tradenum,String content,int star) throws BaseException;
+	public void CreatDetails(int usernum);
+	public List<Beangoods_eva> Showeva(int Tradenum) throws BaseException;
 }
