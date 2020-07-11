@@ -9,6 +9,13 @@ public class BeanShopping {
      private int pur_number;
      private float Discount;
      private float set_money;
+     private int user_number;
+	public int getUser_number() {
+		return user_number;
+	}
+	public void setUser_number(int user_number) {
+		this.user_number = user_number;
+	}
 	public int getCom_Trade_number() {
 		return Com_Trade_number;
 	}
