@@ -47,11 +47,10 @@ public class FrmOrderCom extends JDialog implements ActionListener{
 			this.setVisible(false);
 		else if(e.getSource()==this.btnOk){
 			int Trade_number=Integer.parseInt(this.edtDedmoney.getText());
-			ExampleOrderManager sum = new ExampleOrderManager();
 			try {
 				Beantime_pro t =FreshNetUtil.orderManager.searchPro(FrmMain.details.getTrade_number());
 				if(t==null) {
-					if(Beanuser_table.currentLoginUser.isISmember()) {
+					if(Beanuser_table.currentLoginUser.isISmember()==true) {
 						FreshNetUtil.orderManager.RegOrdDetails(FrmMain.details.getTrade_number(), Trade_number,FrmMain.details.getMember_price());
 					}
 					else {
