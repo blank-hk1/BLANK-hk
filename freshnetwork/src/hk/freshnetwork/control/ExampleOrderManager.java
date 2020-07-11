@@ -3,6 +3,7 @@ package hk.freshnetwork.control;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -13,6 +14,7 @@ import hk.freshnetwork.itf.IOrderManager;
 import hk.freshnetwork.model.BeanShopping;
 import hk.freshnetwork.model.Beanaddlist;
 import hk.freshnetwork.model.Beancoupon;
+import hk.freshnetwork.model.Beangoods_eva;
 import hk.freshnetwork.model.Beanorder_details;
 import hk.freshnetwork.model.Beanorder_form;
 import hk.freshnetwork.model.Beantime_pro;
@@ -305,7 +307,7 @@ public class ExampleOrderManager implements IOrderManager{
 			c.setTime(time);
 			c.add(Calendar.HOUR, 1);
 			java.util.Date date = c.getTime();
-			String sql = "select max(ord_number) from order_form where User_num = ?";		
+			String sql = "select max(ord_number) from order_form where User_num = ?";	
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
 			pst.setInt(1,User_num);
 			java.sql.ResultSet rs=pst.executeQuery();
@@ -339,6 +341,51 @@ public class ExampleOrderManager implements IOrderManager{
 				}
 		}
 		return null;
+	}
+	public void CreatDetails(int usernum) {
+		Connection conn=null;
+		try {
+			conn=DBUtil.getConnection();
+			int ordid=1;
+			String sql = "select max(ord_number) from order_form where User_num = ?";	
+			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.setInt(1,usernum);
+			java.sql.ResultSet rs=pst.executeQuery();
+			if(rs.next()) {
+				ordid=rs.getInt(1);
+			}
+			rs.close();
+			pst.close();
+			sql = "select * from shopping where user_number = ?";
+			pst=conn.prepareStatement(sql);
+			pst.setInt(1,usernum);
+			rs=pst.executeQuery();
+			while(rs.next()) {
+				String sql1 = "insert into order_details(ord_ord_number,Com_Trade_number,Ful_Full_number,pur_number,Discount,set_money) values (?,?,?,?,?,?)";
+				java.sql.PreparedStatement pst1=conn.prepareStatement(sql1);
+				pst1.setInt(1, ordid);
+				pst1.setInt(2, rs.getInt(1));
+				pst1.setInt(3, rs.getInt(2));
+				pst1.setInt(4, rs.getInt(3));
+				pst1.setFloat(5, rs.getFloat(4));
+				pst1.setFloat(6, rs.getFloat(5));
+				pst1.execute();
+				pst1.close();
+			}
+			rs.close();
+			pst.close();
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		finally{
+			if(conn!=null)
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
 	}
 	public void updateCom(int username) throws BusinessException {
 		Connection conn=null;
@@ -396,8 +443,8 @@ public class ExampleOrderManager implements IOrderManager{
 				}
 		}
 	}
-	public List<Beanorder_form> loadRecords(int Usernum)throws BaseException{
-		List<Beanorder_form> Cou = new ArrayList<Beanorder_form>();
+	public List<Beanorder_details> loadRecords(int Usernum)throws BaseException{
+		List<Beanorder_details> Cou = new ArrayList<Beanorder_details>();
 		Connection conn=null;
 		try {
 			conn=DBUtil.getConnection();
@@ -406,53 +453,20 @@ public class ExampleOrderManager implements IOrderManager{
 			pst.setInt(1, Usernum);
 			java.sql.ResultSet rs=pst.executeQuery();					
 			while(rs.next()) {
-				Beanorder_form cou = new Beanorder_form();
-				cou.setOrd_number(rs.getInt(2));
-				cou.setUser_num(Usernum);
-				cou.setAdd_number(rs.getInt(4));
-				cou.setCou_number(rs.getInt(5));
-				cou.setOri_money(rs.getFloat(6));
-				cou.setSet_money(rs.getFloat(7));
-				cou.setAri_time(rs.getTimestamp(8));
-				cou.setOrd_state(rs.getString(9));
-				Cou.add(cou);
-			}
-		}catch (SQLException e) {
-			e.printStackTrace();
-			throw new DbException(e);
-		}
-		finally{
-			if(conn!=null)
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-		}
-		return Cou;		
-	}
-	public List<Beanorder_form> loadRecordStat(int Usernum,String state)throws BaseException{
-		List<Beanorder_form> Cou = new ArrayList<Beanorder_form>();
-		Connection conn=null;
-		try {
-			conn=DBUtil.getConnection();
-			String sql = "select * from order_form where User_num = ? and ord_state = ?";			
-			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
-			pst.setInt(1, Usernum);
-			pst.setString(2, state);
-			java.sql.ResultSet rs=pst.executeQuery();					
-			while(rs.next()) {
-				Beanorder_form cou = new Beanorder_form();
-				cou.setOrd_number(rs.getInt(2));
-				cou.setUser_num(Usernum);
-				cou.setAdd_number(rs.getInt(4));
-				cou.setCou_number(rs.getInt(5));
-				cou.setOri_money(rs.getFloat(6));
-				cou.setSet_money(rs.getFloat(7));
-				cou.setAri_time(rs.getTimestamp(8));
-				cou.setOrd_state(rs.getString(9));
-				Cou.add(cou);
+				Beanorder_details cou = new Beanorder_details();
+				String sql1 = "select * from order_details where ord_ord_number = ?";
+				java.sql.PreparedStatement pst1=conn.prepareStatement(sql1);
+				pst1.setInt(1, rs.getInt(2));
+				java.sql.ResultSet rs1=pst1.executeQuery();
+				while(rs1.next()) {
+					cou.setOrd_ord_number(rs1.getInt(1));
+					cou.setCom_Trade_number(rs1.getInt(2));
+					cou.setFul_Full_number(rs1.getInt(3));
+					cou.setPur_number(rs1.getInt(4));
+					cou.setDiscount(rs1.getFloat(5));
+					cou.setSet_money(rs1.getFloat(6));
+					Cou.add(cou);
+				}				
 			}
 		}catch (SQLException e) {
 			e.printStackTrace();
@@ -522,5 +536,75 @@ public class ExampleOrderManager implements IOrderManager{
 				}
 		}
 		return an;
+	}
+	public Beangoods_eva Addeva(int Usernum,int Tradenum,String content,int star) throws BaseException{
+		Beangoods_eva eva =new Beangoods_eva();
+		Connection conn=null;
+		try {
+			conn=DBUtil.getConnection();
+			Timestamp time = new java.sql.Timestamp(System.currentTimeMillis());
+			String sql = "insert into goods_eva(Use_User_num,Com_Trade_number,Eva_content,Eva_date,Star) values (?,?,?,?,?)";			
+			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.setInt(1, Usernum);
+			pst.setInt(2, Tradenum);
+			pst.setString(3, content);
+			pst.setInt(5, star);
+			pst.setTimestamp(4, time);
+			pst.execute();
+			pst.close();
+			eva.setUse_User_num(Usernum);
+			eva.setCom_Trade_number(Tradenum);
+			eva.setEva_content(content);
+			eva.setStar(star);
+			eva.setEva_date(time);
+			
+		}catch (SQLException e) {
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+		finally{
+			if(conn!=null)
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+		return eva;
+	}
+	public List<Beangoods_eva> Showeva(int Tradenum) throws BaseException{
+		List<Beangoods_eva> eva =new ArrayList<Beangoods_eva>();
+		Connection conn=null;
+		try {
+			conn=DBUtil.getConnection();
+			Timestamp time = new java.sql.Timestamp(System.currentTimeMillis());
+			String sql = "select * from goods_eva where Com_Trade_number = ?";			
+			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.setInt(1, Tradenum);       
+			java.sql.ResultSet rs=pst.executeQuery();
+			while(rs.next()) {
+				Beangoods_eva good = new Beangoods_eva();
+				good.setUse_User_num(rs.getInt(1));
+				good.setEva_content(rs.getString(3));
+				good.setEva_date(rs.getTimestamp(4));
+				good.setStar(rs.getInt(5));
+				eva.add(good);
+			}
+			
+		}catch (SQLException e) {
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+		finally{
+			if(conn!=null)
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+		return eva;
 	}
 }
