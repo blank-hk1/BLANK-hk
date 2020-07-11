@@ -21,6 +21,7 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import hk.freshnetwork.action.FreshNetUtil;
+import hk.freshnetwork.model.Beanorder_details;
 import hk.freshnetwork.model.Beanorder_form;
 import hk.freshnetwork.model.Beanuser_table;
 import hk.freshnetwork.util.BaseException;
@@ -28,13 +29,11 @@ import hk.freshnetwork.util.BaseException;
 public class FrmComRecords extends JDialog implements ActionListener{
 	private JPanel toolBar = new JPanel();
 	private JButton btnadd = new JButton("添加评论");
-	String[] strArray= {" ","下单","配送","送达"};
-	private JComboBox combobox=new JComboBox(strArray);
-	private JButton btnSearch = new JButton("查询");
-	private Object tblTitle[]=Beanorder_form.tableTitles;
+	private JButton btnlook = new JButton("查看评论");
+	private Object tblTitle[]=Beanorder_details.tableTitles;
 	private Object tblData[][];
-	public List<Beanorder_form> record=null;
-	public static Beanorder_form records = null;
+	public List<Beanorder_details> record=null;
+	public static Beanorder_details records = null;
 	DefaultTableModel tablmod=new DefaultTableModel();
 	private JTable dataTable=new JTable(tablmod);
 	private void reloadTable() throws BaseException{
@@ -44,43 +43,20 @@ public class FrmComRecords extends JDialog implements ActionListener{
 			JOptionPane.showMessageDialog(null, e.getMessage(), "错误",JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		tblData =  new Object[record.size()][Beanorder_form.tableTitles.length];
+		tblData =  new Object[record.size()][Beanorder_details.tableTitles.length];
 		for(int i=0;i<record.size();i++){
-			for(int j=0;j<Beanorder_form.tableTitles.length;j++)
+			for(int j=0;j<Beanorder_details.tableTitles.length;j++)
 				tblData[i][j]=record.get(i).getCell(j);
 		}
 		tablmod.setDataVector(tblData,tblTitle);
 		this.dataTable.validate();
 		this.dataTable.repaint();
-	}
-	private void searchreloadTable() throws BaseException{
-		try {
-			if (combobox.getSelectedItem().toString().equals(" ")) {
-				record=FreshNetUtil.orderManager.loadRecords(Beanuser_table.currentLoginUser.getUser_num());
-			}
-			else {
-				record = FreshNetUtil.orderManager.loadRecordStat(Beanuser_table.currentLoginUser.getUser_num(),combobox.getSelectedItem().toString());
-			}			
-		} catch (BaseException e) {
-			JOptionPane.showMessageDialog(null, e.getMessage(), "错误",JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-		tblData =  new Object[record.size()][Beanorder_form.tableTitles.length];
-		for(int i=0;i<record.size();i++){
-			for(int j=0;j<Beanorder_form.tableTitles.length;j++)
-				tblData[i][j]=record.get(i).getCell(j);
-		}
-		tablmod.setDataVector(tblData,tblTitle);
-		this.dataTable.validate();
-		this.dataTable.repaint();
-	}
-	
+	}	
 	public FrmComRecords(Frame f, String s, boolean b) throws BaseException {
 		super(f, s, b);
 		toolBar.setLayout(new FlowLayout(FlowLayout.LEFT));
 		toolBar.add(btnadd);
-		toolBar.add(btnSearch);
-		
+		toolBar.add(btnlook);
 		
 		this.getContentPane().add(toolBar, BorderLayout.NORTH);
 
@@ -96,7 +72,7 @@ public class FrmComRecords extends JDialog implements ActionListener{
 		this.validate();
 
 		this.btnadd.addActionListener(this);
-		this.btnSearch.addActionListener(this);
+		this.btnlook.addActionListener(this);
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				//System.exit(0);
@@ -110,21 +86,28 @@ public class FrmComRecords extends JDialog implements ActionListener{
 		if(e.getSource()==this.btnadd){
 			int i=this.dataTable.getSelectedRow();
 			if(i<0) {
-				JOptionPane.showMessageDialog(null,  "请选择菜谱","提示",JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null,  "请选择消费记录","提示",JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			records=this.record.get(i);
-			
-			
+			FrmAddEva dlg = new FrmAddEva(this,"添加评论",true);	
+			dlg.setVisible(true);
 		}
-		else if(e.getSource()==this.btnSearch){
+		else if(e.getSource()==this.btnlook) {
+			int i=this.dataTable.getSelectedRow();
+			if(i<0) {
+				JOptionPane.showMessageDialog(null,  "请选择要查看的商品","提示",JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			records=this.record.get(i);
+			FrmLookEva dlg = null;
 			try {
-				this.searchreloadTable();
+				dlg = new FrmLookEva(this,"查看评论",true);
 			} catch (BaseException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
-			}
+			}	
+			dlg.setVisible(true);
 		}
-		
 	}
 }
