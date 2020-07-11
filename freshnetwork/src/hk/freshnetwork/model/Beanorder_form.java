@@ -1,8 +1,15 @@
 package hk.freshnetwork.model;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+
+import hk.freshnetwork.action.FreshNetUtil;
+import hk.freshnetwork.ui.FrmChooseAddress;
+import hk.freshnetwork.ui.FrmChooseCoupon;
+import hk.freshnetwork.util.BaseException;
 
 public class Beanorder_form {
+	public static final String[] tableTitles={"订单编号","详细地址","优惠券内容","原始金额","结算金额","要求到达时间","订单状态"};
     private int ord_number;
     private int User_num;
     private int add_number;
@@ -59,5 +66,15 @@ public class Beanorder_form {
 	public void setOrd_state(String ord_state) {
 		this.ord_state = ord_state;
 	}
-	
+	SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd");
+	public String getCell(int col) throws BaseException{
+		if(col==0) return Integer.toString(this.ord_number);
+		else if(col==1) return FreshNetUtil.orderManager.ReadAddName(this.add_number).getAddress();
+		else if(col==2) return FreshNetUtil.orderManager.ReadCouName(this.Cou_number).getContent();
+		else if(col==3) return Float.toString(this.ori_money);
+		else if(col==4) return Float.toString(this.set_money);
+		else if(col==5) return df.format(this.ari_time);
+		else if(col==6) return this.ord_state;
+		else return "";
+	}
 }
