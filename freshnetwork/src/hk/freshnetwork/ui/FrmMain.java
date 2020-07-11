@@ -41,6 +41,7 @@ public class FrmMain extends JFrame implements ActionListener {
 	public static int fflag=0;
 	private static final long serialVersionUID = 1L;
 	private JMenuBar menubar=new JMenuBar();
+	private JPanel workPane = new JPanel();
     private JMenu fresh_back=new JMenu("生鲜后台管理");
     private JMenu Discount_back=new JMenu("优惠后台管理");
     private JMenu User_back=new JMenu("采购商品");
@@ -54,6 +55,9 @@ public class FrmMain extends JFrame implements ActionListener {
     private JButton person_add=new JButton("添加至购物车");
     private JButton person_buy = new JButton("下单");
     private JButton person_delete = new JButton("删除该商品");
+    private JButton person_modify = new JButton("修改商品");
+    
+    private JMenuItem lookRecords = new JMenuItem("查看消费记录");
     
     private JMenuItem  Fresh_category=new JMenuItem("生鲜类别管理");
     private JMenuItem  menu_manager=new JMenuItem("菜谱管理");
@@ -141,7 +145,7 @@ public class FrmMain extends JFrame implements ActionListener {
 		if(commoditys<0) return;
 		//Beancommodity_information details = planSteps.get(commodity);
 		try {
-			orddetails = FreshNetUtil.orderManager.loadOrd();
+			orddetails = FreshNetUtil.orderManager.loadOrd(Beanuser_table.currentLoginUser.getUser_num());
 		}catch (BaseException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "错误",JOptionPane.ERROR_MESSAGE);
 			return;
@@ -170,16 +174,17 @@ public class FrmMain extends JFrame implements ActionListener {
 		    this.person_more.add(this.person_modifymail); this.person_modifymail.addActionListener(this);
 		    this.person_more.add(this.person_modifycity); this.person_modifycity.addActionListener(this);
 		    this.person_more.add(this.person_openvip); this.person_openvip.addActionListener(this);
-		    this.person_more.add(this.person_addlist); this.person_addlist .addActionListener(this);
+		    this.person_more.add(this.person_addlist); this.person_addlist.addActionListener(this);
+		    this.person_step.add(lookRecords);this.lookRecords.addActionListener(this);
 		    
-		    
-		    person_buy.setFont(new Font(Font.DIALOG,Font.BOLD,20));
-		    person_plan.setFont(new Font(Font.DIALOG,Font.BOLD,20));
-		    person_step.setFont(new Font(Font.DIALOG,Font.BOLD,20));
-		    person_static.setFont(new Font(Font.DIALOG,Font.BOLD,20));
-		    person_delete.setFont(new Font(Font.DIALOG,Font.BOLD,20));
-		    person_add.setFont(new Font(Font.DIALOG,Font.BOLD,20));
-		    person_more.setFont(new Font(Font.DIALOG,Font.BOLD,20));
+		    person_buy.setFont(new Font(Font.DIALOG,Font.BOLD,15));
+		    person_plan.setFont(new Font(Font.DIALOG,Font.BOLD,15));
+		    person_step.setFont(new Font(Font.DIALOG,Font.BOLD,15));
+		    person_static.setFont(new Font(Font.DIALOG,Font.BOLD,15));
+		    person_delete.setFont(new Font(Font.DIALOG,Font.BOLD,15));
+		    person_add.setFont(new Font(Font.DIALOG,Font.BOLD,15));
+		    person_more.setFont(new Font(Font.DIALOG,Font.BOLD,15));
+		    person_modify.setFont(new Font(Font.DIALOG,Font.BOLD,15));
 		    
 		    person_buy.setBorderPainted(false);
 		    person_plan.setBorderPainted(false);
@@ -188,6 +193,7 @@ public class FrmMain extends JFrame implements ActionListener {
 		    person_delete.setBorderPainted(false);
 		    person_add.setBorderPainted(false);
 		    person_more.setBorderPainted(false);
+		    person_modify.setBorderPainted(false);
 		    
 		    menubar.add(person_plan);
 		    menubar.add(person_step);
@@ -195,16 +201,23 @@ public class FrmMain extends JFrame implements ActionListener {
 		    menubar.add(person_more);
 		    menubar.add(person_add);
 		    menubar.add(blank);
-		    menubar.add(person_buy);
-		    menubar.add(person_delete);
+		    
+		    workPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		    workPane.add(person_buy);
+		    workPane.add(person_modify);
+		    workPane.add(person_delete);
+		    this.getContentPane().add(workPane, BorderLayout.SOUTH);
+		    
 		    this.person_add.addActionListener(this);
 		    this.person_buy.addActionListener(this);
 		    this.person_delete.addActionListener(this);
+		    this.person_modify.addActionListener(this);
 		    this.setJMenuBar(menubar);
 		    
 		    JScrollPane store = new JScrollPane(this.dataTablePlan);
 		    store.setPreferredSize(new Dimension(700,10));
 		    this.getContentPane().add(store, BorderLayout.WEST);
+		    
 		    
 		    this.dataTablePlan.addMouseListener(new MouseAdapter (){
 
@@ -244,10 +257,10 @@ public class FrmMain extends JFrame implements ActionListener {
 		    this.getContentPane().add(new JScrollPane(this.dataOrdPlan), BorderLayout.EAST);
 		    this.reloadPlanTable();
 		    //状态栏
-		    statusBar.setLayout(new FlowLayout(FlowLayout.LEFT));
-		    JLabel label=new JLabel("您好          "+Beanuser_table.currentLoginUser.getUser_name());//修改成   您好！+登陆用户名
-		    statusBar.add(label);
-		    this.getContentPane().add(statusBar,BorderLayout.SOUTH);
+		    //statusBar.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		    //JLabel label=new JLabel("您好          "+Beanuser_table.currentLoginUser.getUser_name());//修改成   您好！+登陆用户名
+		    //statusBar.add(label);
+		    //this.getContentPane().add(statusBar,BorderLayout.SOUTH);
 		    this.addWindowListener(new WindowAdapter(){   
 		    	public void windowClosing(WindowEvent e){ 
 		    		System.exit(0);
@@ -437,6 +450,32 @@ public class FrmMain extends JFrame implements ActionListener {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+		}
+		else if(e.getSource()==this.person_modify) {
+			int i=this.dataOrdPlan.getSelectedRow();
+			if(i<0) {
+				JOptionPane.showMessageDialog(null,  "请选择要修改的商品","提示",JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			shops=this.orddetails.get(i);
+			FrmModifyShop dlg = new FrmModifyShop(this,"修改商品",true);
+			dlg.setVisible(true);
+			try {
+				this.reloadShopCart(i);
+			} catch (BaseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		else if(e.getSource()==this.lookRecords) {
+			FrmComRecords dlg = null;
+			try {
+				dlg = new FrmComRecords(this,"查看消费记录",true);
+			} catch (BaseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			dlg.setVisible(true);
 		}
   }
 }
