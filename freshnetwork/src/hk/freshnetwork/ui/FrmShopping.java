@@ -66,6 +66,7 @@ public class FrmShopping extends JDialog implements ActionListener{
 			try {
 				FreshNetUtil.orderManager.updateCom(Beanuser_table.currentLoginUser.getUser_num());
 				FreshNetUtil.orderManager.CreatOrder(Beanuser_table.currentLoginUser.getUser_num(), FrmChooseAddress.Beanaddlist.getAdd_number(), FrmChooseCoupon.ChooseCoupons.getCou_number(), t, money);
+				FreshNetUtil.orderManager.CreatDetails(Beanuser_table.currentLoginUser.getUser_num());
 				JOptionPane.showMessageDialog(null,  "下单成功","提示",JOptionPane.INFORMATION_MESSAGE);
 				FreshNetUtil.orderManager.deleteAllShop(Beanuser_table.currentLoginUser.getUser_num());
 			} catch (BusinessException e1) {
