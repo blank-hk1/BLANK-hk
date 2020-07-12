@@ -312,8 +312,17 @@ public class ExamplecoupouManager implements IcoupouManager{
 			}catch(ParseException e1){
 				e1.printStackTrace();
 			}
-			String sql="insert into time_pro(Trade_number,Pro_price,Prom_number,ProStart_date,ProEnd_date) values(?,?,?,?,?)";
+			String sql = "select * from commodity_information where Trade_number = ?";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.setInt(1, Trade_number);
+			java.sql.ResultSet rs=pst.executeQuery();
+			if(!rs.next()) {
+				throw new BusinessException("该商品编号不存在!");
+			}
+			rs.close();
+			pst.close();
+			sql="insert into time_pro(Trade_number,Pro_price,Prom_number,ProStart_date,ProEnd_date) values(?,?,?,?,?)";
+			pst=conn.prepareStatement(sql);
 			pst.setInt(1, Trade_number);
 			pst.setFloat(2, Pro_price);
 			pst.setInt(3, Prom_number);
@@ -330,7 +339,7 @@ public class ExamplecoupouManager implements IcoupouManager{
 			sql = "select Pro_number from time_pro where Trade_number = ?";
 			pst=conn.prepareStatement(sql);
 			pst.setInt(1,Trade_number);
-			java.sql.ResultSet rs=pst.executeQuery();
+			rs=pst.executeQuery();
 			if(rs.next()) {
 				t= rs.getInt(1);
 			}
@@ -372,10 +381,19 @@ public class ExamplecoupouManager implements IcoupouManager{
 			}catch(ParseException e1){
 				e1.printStackTrace();
 			}
-			String sql = "select * from time_pro where Pro_number = ?";
+			String sql = "select * from commodity_information where Trade_number = ?";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
-			pst.setInt(1,Pro_number);
+			pst.setInt(1, Trade_number);
 			java.sql.ResultSet rs=pst.executeQuery();
+			if(!rs.next()) {
+				throw new BusinessException("该商品编号不存在!");
+			}
+			rs.close();
+			pst.close();
+			sql = "select * from time_pro where Pro_number = ?";
+			pst=conn.prepareStatement(sql);
+			pst.setInt(1,Pro_number);
+			rs=pst.executeQuery();
 			if(!rs.next()) {
 				throw new BusinessException("要修改的限时促销不存在");
 			}
@@ -465,6 +483,7 @@ public class ExamplecoupouManager implements IcoupouManager{
 	}
 	public List<Beanfull_sheet> loadFullSearch(int Full_number)throws BaseException{
 		List<Beanfull_sheet> Ful = new ArrayList<Beanfull_sheet>();
+		Ful=null;
 		Connection conn=null;
 		try {
 			conn=DBUtil.getConnection();
@@ -688,6 +707,9 @@ public class ExamplecoupouManager implements IcoupouManager{
 		Connection conn=null;
 		try {
 			conn=DBUtil.getConnection();
+			if(Ful_number==0||Trade_number==0) {
+				throw new BusinessException("输入不能为空!");
+			}
 			SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd");
 			java.sql.Date Start_begin = null;
 			java.sql.Date End_pro = null;
@@ -701,8 +723,26 @@ public class ExamplecoupouManager implements IcoupouManager{
 			}catch(ParseException e1){
 				e1.printStackTrace();
 			}
-			String sql="insert into relation(Ful_Full_number,Com_Trade_number,FulStart_date,FulEnd_date) values(?,?,?,?)";
+			String sql = "select * from full_sheet where Full_number = ?";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.setInt(1,Ful_number);
+			java.sql.ResultSet rs=pst.executeQuery();
+			if(!rs.next()) {
+				throw new BusinessException("要添加的满折编号不存在!");
+			}
+			rs.close();
+			pst.close();
+			sql = "select * from commodity_information where Trade_number = ?";
+			pst=conn.prepareStatement(sql);
+			pst.setInt(1,Trade_number);
+			rs=pst.executeQuery();
+			if(!rs.next()) {
+				throw new BusinessException("要添加的商品编号不存在!");
+			}
+			rs.close();
+			pst.close();
+			sql="insert into relation(Ful_Full_number,Com_Trade_number,FulStart_date,FulEnd_date) values(?,?,?,?)";
+			pst=conn.prepareStatement(sql);
 			pst.setInt(1, Ful_number);
 			pst.setInt(2, Trade_number);
 			pst.setTimestamp(3, new java.sql.Timestamp(Start_begin.getTime()));
