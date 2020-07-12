@@ -23,6 +23,7 @@ import hk.freshnetwork.action.FreshNetUtil;
 import hk.freshnetwork.model.Beancommodity_information;
 import hk.freshnetwork.model.Beanmenu_info;
 import hk.freshnetwork.util.BaseException;
+import hk.freshnetwork.util.BusinessException;
 
 public class FrmFreshCom extends JDialog implements ActionListener{
 	private JPanel toolBar = new JPanel();
@@ -146,13 +147,20 @@ public class FrmFreshCom extends JDialog implements ActionListener{
 				return;
 			}
 			COMS=this.COM.get(i);
-			FreshNetUtil.comManager.deleteCom(COMS.getTrade_name());
-			JOptionPane.showMessageDialog(null,  "删除商品成功","提示",JOptionPane.INFORMATION_MESSAGE);
 			try {
-				this.reloadTable();
+				FreshNetUtil.comManager.deleteCom(COMS.getTrade_name());
+				JOptionPane.showMessageDialog(null,  "删除商品成功","提示",JOptionPane.INFORMATION_MESSAGE);
+			} catch (BusinessException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+				JOptionPane.showMessageDialog(null,  "商品无法删除","提示",JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
+			try {
+				this.reloadTable();				
 			} catch (BaseException e1) {
 				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				e1.printStackTrace();				
 			}
 		}
 		else if(e.getSource()==this.btnSearch){
