@@ -23,13 +23,13 @@ public class FrmModifyCom extends JDialog implements ActionListener{
 	
 	private JButton btnOk = new JButton("修改商品");
 	private JButton btnCancel = new JButton("取消");	
-	private JLabel labelNameNow = new JLabel("当前商品名称"+FrmFreshCom.COMS.getTrade_name());
-	private JLabel labelstateNow = new JLabel("当前类别编号："+FrmFreshCom.COMS.getCategory_number());
-	private JLabel labelstepNow = new JLabel("当前商品单价："+FrmFreshCom.COMS.getPrice());
-	private JLabel labelmemberpricenow = new JLabel("当前会员价："+FrmFreshCom.COMS.getMember_price());
-	private JLabel labelnumbernow = new JLabel("当前数量:"+FrmFreshCom.COMS.getNumber());
-	private JLabel labelspecificationsnow = new JLabel("当前规格："+FrmFreshCom.COMS.getSpecifications());
-	private JLabel labeldetailsnow = new JLabel("当前详情："+FrmFreshCom.COMS.getDetails());
+	private JLabel labelNameNow = new JLabel("当前商品名称"+FrmFreshCom.COMS.getTrade_name()+"              ");
+	private JLabel labelstateNow = new JLabel("当前类别编号："+FrmFreshCom.COMS.getCategory_number()+"            ");
+	private JLabel labelstepNow = new JLabel("当前商品单价："+FrmFreshCom.COMS.getPrice()+"            ");
+	private JLabel labelmemberpricenow = new JLabel("当前会员价："+FrmFreshCom.COMS.getMember_price()+"             ");
+	private JLabel labelnumbernow = new JLabel("当前数量:"+FrmFreshCom.COMS.getNumber()+"                    ");
+	private JLabel labelspecificationsnow = new JLabel("当前规格："+FrmFreshCom.COMS.getSpecifications()+"                   ");
+	private JLabel labeldetailsnow = new JLabel("当前详情："+FrmFreshCom.COMS.getDetails()+"                                   ");
 	private JLabel labelcomname = new JLabel("商品名称:");
 	private JLabel labelcomnumber = new JLabel("类别编号：");
 	private JLabel labelcomprice = new JLabel("商品单价:");
@@ -122,6 +122,7 @@ public class FrmModifyCom extends JDialog implements ActionListener{
 				} catch (BaseException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, "要修改的商品类别编号不存在!","成功",JOptionPane.INFORMATION_MESSAGE);
 				}			
 		}
 	}
