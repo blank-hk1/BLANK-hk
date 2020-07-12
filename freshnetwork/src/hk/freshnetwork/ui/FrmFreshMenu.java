@@ -22,6 +22,7 @@ import javax.swing.table.DefaultTableModel;
 import hk.freshnetwork.action.FreshNetUtil;
 import hk.freshnetwork.model.Beanmenu_info;
 import hk.freshnetwork.util.BaseException;
+import hk.freshnetwork.util.BusinessException;
 
 public class FrmFreshMenu extends JDialog implements ActionListener{
 	private JPanel toolBar = new JPanel();
@@ -135,8 +136,15 @@ public class FrmFreshMenu extends JDialog implements ActionListener{
 				return;
 			}
 			menus=this.menu.get(i);
-			FreshNetUtil.freshManager.deleteMenu(menus.getMenu_name());
-			JOptionPane.showMessageDialog(null,  "删除菜谱成功","提示",JOptionPane.INFORMATION_MESSAGE);
+			try {
+				FreshNetUtil.freshManager.deleteMenu(menus.getMenu_name());
+				JOptionPane.showMessageDialog(null,  "删除菜谱成功","提示",JOptionPane.INFORMATION_MESSAGE);
+			} catch (BusinessException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				JOptionPane.showMessageDialog(null,  "该菜谱有商品连接，无法删除!","提示",JOptionPane.INFORMATION_MESSAGE);
+			}
+			
 			this.reloadTable();
 		}
 		else if(e.getSource()==this.btnSearch){
