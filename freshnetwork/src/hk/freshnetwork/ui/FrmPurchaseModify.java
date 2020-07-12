@@ -95,6 +95,7 @@ public class FrmPurchaseModify extends JDialog implements ActionListener{
 				} catch (BusinessException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, "请检查输入的商品编号或员工编号是否出错!","错误",JOptionPane.INFORMATION_MESSAGE);
 				} 		
 		}
 	}
