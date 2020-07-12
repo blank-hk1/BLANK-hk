@@ -28,8 +28,8 @@ public class FrmFreshModify extends JDialog implements ActionListener{
 	
 	private JButton btnOk = new JButton("修改生鲜类别");
 	private JButton btnCancel = new JButton("取消");	
-	private JLabel labelNameNow = new JLabel("当前生鲜名称"+FrmFreshcat.freshs.getCategory_name());
-	private JLabel labelstateNow = new JLabel("当前生鲜描述："+FrmFreshcat.freshs.getCategory_description());
+	private JLabel labelNameNow = new JLabel("当前生鲜名称"+FrmFreshcat.freshs.getCategory_name()+"                       ");
+	private JLabel labelstateNow = new JLabel("当前生鲜描述："+FrmFreshcat.freshs.getCategory_description()+"                        ");
 	private JLabel labelName = new JLabel("生鲜名称：");	
 	private JLabel labelstate = new JLabel("生鲜描述：");
 	private JTextField edtUserId = new JTextField(20);
