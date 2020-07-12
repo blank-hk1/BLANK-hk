@@ -176,11 +176,29 @@ public class ExamplePurchaseManager implements IpurchaseManager{
 		Connection conn=null;
 		try {
 			conn=DBUtil.getConnection();
-			String sql="select chase_num,purchase_amount from purchase_list where chase_number= ? and Trade_number = ?";
+			String sql = "select * from commodity_information where Trade_number = ?";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.setInt(1, Trade_number);
+			java.sql.ResultSet rs=pst.executeQuery();
+			if(!rs.next()) {
+				throw new BusinessException("输入的商品编号不存在!");
+			}
+			rs.close();
+			pst.close();
+			sql = "select * from adm_info where Emp_number = ?";
+			pst=conn.prepareStatement(sql);
+			pst.setInt(1, Emp_number);
+			rs=pst.executeQuery();
+			if(!rs.next()) {
+				throw new BusinessException("输入的员工编号不存在!");
+			}
+			rs.close();
+			pst.close();
+			sql="select chase_num,purchase_amount from purchase_list where chase_number= ? and Trade_number = ?";
+			pst=conn.prepareStatement(sql);
 			pst.setInt(1, chase_number);
 			pst.setInt(2, Trade_number);
-			java.sql.ResultSet rs=pst.executeQuery();
+			rs=pst.executeQuery();
 			Beanpurchase ur = new Beanpurchase();
 			int flag=0;
 			if(rs.next()){
