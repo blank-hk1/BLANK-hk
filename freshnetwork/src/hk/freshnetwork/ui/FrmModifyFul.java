@@ -23,7 +23,7 @@ public class FrmModifyFul extends JDialog implements ActionListener{
 	
 	private JButton btnOk = new JButton("修改满折信息");
 	private JButton btnCancel = new JButton("取消");	
-	private JLabel labelNameNow = new JLabel("当前满折编号"+FrmFreshDis.fulls.getFull_number());
+	private JLabel labelNameNow = new JLabel("当前满折编号"+FrmFreshDis.fulls.getFull_number()+"                                ");
 	private JLabel labelcontent = new JLabel("满折内容:");
 	private JLabel labelAppmoney = new JLabel("适用商品数量：");
 	private JLabel labelDedmoney = new JLabel("折扣：");
