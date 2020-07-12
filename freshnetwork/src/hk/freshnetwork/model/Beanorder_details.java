@@ -48,7 +48,14 @@ public class Beanorder_details {
 	}
 	 public String getCell(int col) throws BaseException{
 			if(col==0) return Integer.toString(this.getCom_Trade_number());
-			else if(col==1) return Integer.toString(this.getFul_Full_number());
+			else if(col==1) {
+				if(this.getFul_Full_number()!=0) {
+					return Integer.toString(this.getFul_Full_number());
+				}
+				else {
+					return "没有满折方案";
+				}
+			}			
 			else if(col==2) return Integer.toString(this.getPur_number());
 			else if(col==3) return Float.toString(this.getDiscount());
 			else if(col==4) return Float.toString(this.getSet_money());
