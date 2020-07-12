@@ -24,7 +24,7 @@ public class FrmModifyCoupon extends JDialog implements ActionListener{
 	
 	private JButton btnOk = new JButton("修改优惠券");
 	private JButton btnCancel = new JButton("取消");	
-	private JLabel labelNameNow = new JLabel("当前优惠券编号"+FrmFreshCoupon.coupons.getCou_number()+"      ");
+	private JLabel labelNameNow = new JLabel("当前优惠券编号"+FrmFreshCoupon.coupons.getCou_number()+"                       ");
 	private JLabel labelcontent = new JLabel("优惠券内容:");
 	private JLabel labelAppmoney = new JLabel("优惠券使用金额：");
 	private JLabel labelDedmoney = new JLabel("减免金额：");
@@ -95,11 +95,13 @@ public class FrmModifyCoupon extends JDialog implements ActionListener{
 			}
 				try {
 					FreshNetUtil.couponManager.modifyCou(FrmFreshCoupon.coupons.getCou_number(), content, App_money, Ded_money, Start, month);
+					JOptionPane.showMessageDialog(null, "修改成功","成功",JOptionPane.INFORMATION_MESSAGE);
 				} catch (BaseException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, "要修改的商品编号不存在!","成功",JOptionPane.INFORMATION_MESSAGE);
 				}; 
-				JOptionPane.showMessageDialog(null, "修改成功","成功",JOptionPane.INFORMATION_MESSAGE);
+				
 				this.setVisible(false);
 			
 		}
