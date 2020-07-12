@@ -22,8 +22,8 @@ public class FrmModifyMenu extends JDialog implements ActionListener{
 	
 	private JButton btnOk = new JButton("修改菜谱");
 	private JButton btnCancel = new JButton("取消");	
-	private JLabel labelNameNow = new JLabel("当前菜谱名称"+FrmFreshMenu.menus.getMenu_name());
-	private JLabel labelstateNow = new JLabel("当前菜谱原料："+FrmFreshMenu.menus.getMenu_Materials());
+	private JLabel labelNameNow = new JLabel("当前菜谱名称"+FrmFreshMenu.menus.getMenu_name()+"                       ");
+	private JLabel labelstateNow = new JLabel("当前菜谱原料："+FrmFreshMenu.menus.getMenu_Materials()+"                    ");
 	private JLabel labelstepNow = new JLabel("当前步骤："+FrmFreshMenu.menus.getStep());
 	private JLabel labelName = new JLabel("菜谱名称：");	
 	private JLabel labelstate = new JLabel("菜谱描述：");
