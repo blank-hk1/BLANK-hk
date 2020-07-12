@@ -82,6 +82,9 @@ public class ExamplefreshManager implements IfreshManager{
 		return fresh;
 	}
 	public Beanfresh_information regFresh(String freshname,String miaoshu) throws BaseException{
+		if(freshname.equals("")||miaoshu.equals("")) {
+			throw new BusinessException("输入内容不能为空!");
+		}
 		Connection conn=null;
 		try {
 			conn=DBUtil.getConnection();
@@ -89,7 +92,7 @@ public class ExamplefreshManager implements IfreshManager{
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
 			pst.setString(1, freshname);
 			java.sql.ResultSet rs=pst.executeQuery();
-			if(rs.next()) throw new BusinessException("登陆账号已经存在");
+			if(rs.next()) throw new BusinessException("该生鲜类别已经存在!");
 			rs.close();
 			pst.close();
 			
@@ -326,6 +329,9 @@ public class ExamplefreshManager implements IfreshManager{
 		}
 	}
 	public Beanmenu_info regMenu(String menuname,String menuMaterials,String step) throws BaseException{
+		if(menuname.equals("")||menuMaterials.equals("")||step.equals("")) {
+			throw new BusinessException("输入内容不能为空!");
+		}
 		Connection conn=null;
 		try {
 			conn=DBUtil.getConnection();
@@ -333,7 +339,7 @@ public class ExamplefreshManager implements IfreshManager{
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
 			pst.setString(1, menuname);
 			java.sql.ResultSet rs=pst.executeQuery();
-			if(rs.next()) throw new BusinessException("登陆账号已经存在");
+			if(rs.next()) throw new BusinessException("该菜谱已经存在!");
 			rs.close();
 			pst.close();
 			
