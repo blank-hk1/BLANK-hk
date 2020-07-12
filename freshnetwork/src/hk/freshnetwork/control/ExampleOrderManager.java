@@ -569,6 +569,9 @@ public class ExampleOrderManager implements IOrderManager{
 		return an;
 	}
 	public Beangoods_eva Addeva(int Usernum,int Tradenum,String content,int star) throws BaseException{
+		if(content.equals("")) {
+			throw new BusinessException("评价内容不能为空!");
+		}
 		Beangoods_eva eva =new Beangoods_eva();
 		Connection conn=null;
 		try {
