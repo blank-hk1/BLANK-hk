@@ -24,11 +24,11 @@ public class FrmModifyAddress extends JDialog implements ActionListener{
 	
 	private JButton btnOk = new JButton("修改配送地址");
 	private JButton btnCancel = new JButton("取消");	
-	private JLabel labelAddnumber = new JLabel("当前配送地址编号"+FrmFreshaddress.Addresslists.getAdd_number()+"      ");
-	private JLabel labelqunow = new JLabel("当前所在区域:"+FrmFreshaddress.Addresslists.getQu()+"            ");
-	private JLabel labeladdressnow = new JLabel("详细地址："+FrmFreshaddress.Addresslists.getAddress()+"        ");
-	private JLabel labelcontactsnow = new JLabel("当前联系人："+FrmFreshaddress.Addresslists.getContacts()+"      ");
-	private JLabel labelphonenow = new JLabel("当前联系电话："+FrmFreshaddress.Addresslists.getCon_phone()+"                      ");
+	private JLabel labelAddnumber = new JLabel("当前配送地址编号"+FrmFreshaddress.Addresslists.getAdd_number()+"              ");
+	private JLabel labelqunow = new JLabel("当前所在区域:"+FrmFreshaddress.Addresslists.getQu()+"                  ");
+	private JLabel labeladdressnow = new JLabel("详细地址："+FrmFreshaddress.Addresslists.getAddress()+"               ");
+	private JLabel labelcontactsnow = new JLabel("当前联系人："+FrmFreshaddress.Addresslists.getContacts()+"              ");
+	private JLabel labelphonenow = new JLabel("当前联系电话："+FrmFreshaddress.Addresslists.getCon_phone()+"                         ");
 	private JLabel labelqu = new JLabel("配送区域:");
 	private JLabel labeladdress = new JLabel("配送详细地址：");
 	private JLabel labelcontacts = new JLabel("联系人：");
