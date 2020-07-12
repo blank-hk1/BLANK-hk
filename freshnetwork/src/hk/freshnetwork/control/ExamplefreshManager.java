@@ -55,9 +55,9 @@ public class ExamplefreshManager implements IfreshManager{
 		Connection conn=null;
 		try {
 			conn=DBUtil.getConnection();
-			String sql = "select * from fresh_information where Category_name = ?";
+			String sql = "select * from fresh_information where Category_name like ?";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
-			pst.setString(1, Category_name);
+			pst.setString(1, "%"+Category_name+"%");
 			java.sql.ResultSet rs=pst.executeQuery();			
 			while(rs.next()) {
 				Beanfresh_information fr = new Beanfresh_information();
@@ -183,13 +183,28 @@ public class ExamplefreshManager implements IfreshManager{
 				}
 		}
 	}
-	public void deleteFresh(String Category_name){
+	public void deleteFresh(String Category_name) throws BusinessException{
 		Connection conn=null;
 		try {
 			String str = null;
 			conn=DBUtil.getConnection();
-			String sql="delete from fresh_information where Category_name = ?";
+			String sql="select * from fresh_information where Category_name = ?";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.setString(1, Category_name);
+			java.sql.ResultSet rs=pst.executeQuery();
+			if(rs.next()) {
+				String sql1 = "select * from commodity_information where Category_number = ?";
+				java.sql.PreparedStatement pst1=conn.prepareStatement(sql1);
+				pst1.setInt(1, rs.getInt(1));
+				java.sql.ResultSet rs1=pst1.executeQuery();
+				if(rs1.next()) {
+					throw new BusinessException("该商品无法删除!");
+				}
+				rs1.close();
+				pst1.close();
+			}
+			sql="delete from fresh_information where Category_name = ?";
+			pst=conn.prepareStatement(sql);
 			pst.setString(1, Category_name);
 			pst.execute();
 		    pst.close();
@@ -244,9 +259,9 @@ public class ExamplefreshManager implements IfreshManager{
 		Connection conn=null;
 		try {
 			conn=DBUtil.getConnection();
-			String sql = "select * from fresh_information where Category_name = ?";		
+			String sql = "select * from menu_information where Menu_name like ?";		
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
-			pst.setString(1, menu_name);
+			pst.setString(1, "%"+menu_name+"%");
 			java.sql.ResultSet rs=pst.executeQuery();			
 			while(rs.next()) {
 				Beanmenu_info me = new Beanmenu_info();
@@ -271,13 +286,28 @@ public class ExamplefreshManager implements IfreshManager{
 		}
 		return Menu;
 	}
-	public void deleteMenu(String Menu_name){
+	public void deleteMenu(String Menu_name) throws BusinessException{
 		Connection conn=null;
 		try {
 			String str = null;
 			conn=DBUtil.getConnection();
-			String sql="delete from menu_information where Menu_name = ?";
+			String sql="select * from menu_information where Menu_name = ?";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.setString(1, Menu_name);
+			java.sql.ResultSet rs=pst.executeQuery();
+			if(rs.next()) {
+				String sql1 = "select * from recommend_menu where Men_Menu_number = ?";
+				java.sql.PreparedStatement pst1=conn.prepareStatement(sql1);
+				pst1.setInt(1, rs.getInt(1));
+				java.sql.ResultSet rs1=pst1.executeQuery();
+				if(rs1.next()) {
+					throw new BusinessException("该商品无法删除!");
+				}
+				rs1.close();
+				pst1.close();
+			}
+			sql="delete from menu_information where Menu_name = ?";
+			pst=conn.prepareStatement(sql);
 			pst.setString(1, Menu_name);
 			pst.execute();
 		    pst.close();
