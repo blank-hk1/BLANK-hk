@@ -49,7 +49,7 @@ public class FrmMain extends JFrame implements ActionListener {
     
     private JMenu person_plan=new JMenu("商品推荐");
     private JMenu person_step=new JMenu("消费记录");
-    private JMenu person_static=new JMenu("购物车");
+    private JMenu person_static=new JMenu("优惠活动");
     private JMenu person_more=new JMenu("个人中心");
     private JLabel blank=new JLabel("                                                                                                                                                                                                                                                                                                                              ");
     private JButton person_add=new JButton("添加至购物车");
@@ -58,6 +58,8 @@ public class FrmMain extends JFrame implements ActionListener {
     private JButton person_modify = new JButton("修改商品");
     
     private JMenuItem lookRecords = new JMenuItem("查看消费记录");
+    private JMenuItem lookRecommend = new JMenuItem("查看推荐商品");
+    private JMenuItem lookmenu = new JMenuItem("查看菜谱");
     
     private JMenuItem  Fresh_category=new JMenuItem("生鲜类别管理");
     private JMenuItem  menu_manager=new JMenuItem("菜谱管理");
@@ -80,8 +82,10 @@ public class FrmMain extends JFrame implements ActionListener {
     private JMenuItem  admin_modifyPwd=new JMenuItem("密码修改");
     private JMenuItem  admin_add=new JMenuItem("添加管理员");
     
-    private JMenuItem  menuItem_static1=new JMenuItem("统计1");
-    
+    private JMenuItem  menuItem_time=new JMenuItem("限时促销活动");
+    private JMenuItem  menuItem_full=new JMenuItem("满折活动");
+    private JMenuItem  menuItem_coupon=new JMenuItem("优惠券活动");
+    private JMenuItem  menuItem_relation=new JMenuItem("满折商品关联");
     
 	private FrmLogin dlgLogin=null;
 	private JPanel statusBar = new JPanel();
@@ -92,6 +96,7 @@ public class FrmMain extends JFrame implements ActionListener {
 	private Object tblOrdTitle[]=BeanShopping.tableTitles;
 	public static Beancommodity_information details=null;
 	public static BeanShopping shops=null;
+	public static Beanfresh_information curPlan=null;
 	DefaultTableModel tabPlanModel=new DefaultTableModel();
 	DefaultTableModel tabComModel=new DefaultTableModel();
 	DefaultTableModel tabOrdModel=new DefaultTableModel();
@@ -125,7 +130,7 @@ public class FrmMain extends JFrame implements ActionListener {
 	}
 	private void reloadPlanStepTabel(int planIdx) throws BaseException{
 		if(planIdx<0) return;
-		Beanfresh_information curPlan = allPlan.get(planIdx);
+		curPlan = allPlan.get(planIdx);
 		try {
 			planSteps=FreshNetUtil.comManager.searchComFresh(curPlan.getCategory_number());
 		} catch (BaseException e) {
@@ -168,7 +173,10 @@ public class FrmMain extends JFrame implements ActionListener {
 			this.setTitle("生鲜海超用户系统");
 			
 		    //菜单
-		    this.person_static.add(this.menuItem_static1); this.menuItem_static1.addActionListener(this);
+		    this.person_static.add(this.menuItem_time); this.menuItem_time.addActionListener(this);
+		    this.person_static.add(this.menuItem_coupon); this.menuItem_coupon.addActionListener(this);
+		    this.person_static.add(this.menuItem_full); this.menuItem_full.addActionListener(this);
+		    this.person_static.add(this.menuItem_relation); this.menuItem_relation.addActionListener(this);
 		    this.person_more.add(this.person_modifyPwd); this.person_modifyPwd.addActionListener(this);
 		    this.person_more.add(this.person_modifyphone); this.person_modifyphone.addActionListener(this);
 		    this.person_more.add(this.person_modifymail); this.person_modifymail.addActionListener(this);
@@ -176,6 +184,8 @@ public class FrmMain extends JFrame implements ActionListener {
 		    this.person_more.add(this.person_openvip); this.person_openvip.addActionListener(this);
 		    this.person_more.add(this.person_addlist); this.person_addlist.addActionListener(this);
 		    this.person_step.add(lookRecords);this.lookRecords.addActionListener(this);
+		    this.person_plan.add(this.lookRecommend);this.lookRecommend.addActionListener(this);
+		    this.person_plan.add(this.lookmenu);this.lookmenu.addActionListener(this);
 		    
 		    person_buy.setFont(new Font(Font.DIALOG,Font.BOLD,15));
 		    person_plan.setFont(new Font(Font.DIALOG,Font.BOLD,15));
@@ -415,7 +425,7 @@ public class FrmMain extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(null,  "请选择要购买的商品","提示",JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			details=this.planSteps.get(i);			
+			details=this.planSteps.get(i);		
 			FrmOrderCom dlg=new FrmOrderCom(this,"添加至购物车",true);
 			dlg.setVisible(true);
 			try {
@@ -475,6 +485,42 @@ public class FrmMain extends JFrame implements ActionListener {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+			dlg.setVisible(true);
+		}
+		else if(e.getSource()==this.lookRecommend) {
+			int i=this.datacomPlan.getSelectedRow();
+			if(i<0) {
+				JOptionPane.showMessageDialog(null,  "请选择相关商品用以推荐","提示",JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			details=this.planSteps.get(i);
+			FrmCommend_Menu dlg = null;
+			try {
+				dlg = new FrmCommend_Menu(this,"查看推荐商品",true);
+			} catch (BaseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			dlg.setVisible(true);
+		}
+		else if(e.getSource()==this.lookmenu) {
+			FrmShowMenu dlg = new FrmShowMenu(this,"查看菜谱",true);
+			dlg.setVisible(true);
+		}
+		else if(e.getSource()==this.menuItem_time) {
+			FrmShowTime dlg = new FrmShowTime(this,"限时促销活动",true);
+			dlg.setVisible(true);
+		}
+		else if(e.getSource()==this.menuItem_coupon) {
+			FrmShowCoupon dlg = new FrmShowCoupon(this,"优惠券活动",true);
+			dlg.setVisible(true);
+		}
+		else if(e.getSource()==this.menuItem_full) {
+			FrmShowFull dlg = new FrmShowFull(this,"满折活动",true);
+			dlg.setVisible(true);
+		}
+		else if(e.getSource()==this.menuItem_relation) {
+			FrmShowRelation dlg = new FrmShowRelation(this,"满折商品关联",true);
 			dlg.setVisible(true);
 		}
   }
