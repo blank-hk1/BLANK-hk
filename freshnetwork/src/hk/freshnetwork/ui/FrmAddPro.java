@@ -73,7 +73,7 @@ public class FrmAddPro extends JDialog implements ActionListener{
 					JOptionPane.showMessageDialog(null, "添加成功","成功",JOptionPane.INFORMATION_MESSAGE);
 				}
 				else {
-					JOptionPane.showMessageDialog(null, "添加失败","错误",JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "该商品编号不存在!","错误",JOptionPane.ERROR_MESSAGE);
 				}
 			} catch (BaseException e1) {
 				JOptionPane.showMessageDialog(null, e1.getMessage(),"错误",JOptionPane.ERROR_MESSAGE);
