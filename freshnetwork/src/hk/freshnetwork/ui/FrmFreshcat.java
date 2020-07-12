@@ -24,6 +24,7 @@ import javax.swing.table.DefaultTableModel;
 import hk.freshnetwork.action.FreshNetUtil;
 import hk.freshnetwork.model.Beanfresh_information;
 import hk.freshnetwork.util.BaseException;
+import hk.freshnetwork.util.BusinessException;
 
 
 public class FrmFreshcat extends JDialog implements ActionListener{
@@ -138,8 +139,15 @@ public class FrmFreshcat extends JDialog implements ActionListener{
 				return;
 			}
 			freshs=this.fresh.get(i);
-			FreshNetUtil.freshManager.deleteFresh(freshs.getCategory_name());
-			JOptionPane.showMessageDialog(null,  "删除成功","提示",JOptionPane.INFORMATION_MESSAGE);
+			try {
+				FreshNetUtil.freshManager.deleteFresh(freshs.getCategory_name());
+				JOptionPane.showMessageDialog(null,  "删除成功","提示",JOptionPane.INFORMATION_MESSAGE);
+			} catch (BusinessException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				JOptionPane.showMessageDialog(null,  "该类别有商品连接，无法删除!","提示",JOptionPane.INFORMATION_MESSAGE);
+			}
+			
 			this.reloadTable();
 		}
 		else if(e.getSource()==this.btnSearch){
