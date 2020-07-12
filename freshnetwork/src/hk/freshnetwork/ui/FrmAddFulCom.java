@@ -17,6 +17,7 @@ import hk.freshnetwork.action.FreshNetUtil;
 import hk.freshnetwork.control.ExamplecoupouManager;
 import hk.freshnetwork.model.Beanrelation;
 import hk.freshnetwork.util.BaseException;
+import hk.freshnetwork.util.BusinessException;
 
 public class FrmAddFulCom extends JDialog implements ActionListener{
 	private JPanel toolBar = new JPanel();
@@ -54,17 +55,26 @@ public class FrmAddFulCom extends JDialog implements ActionListener{
 			int Trade_number=Integer.parseInt(this.edtDedmoney.getText());
 			String Start = null;
 			try {
-				Start = df.format(FreshNetUtil.couponManager.loadFullSearch(number).get(0).getFulStart_date());
+				if(FreshNetUtil.couponManager.loadFullSearch(number)==null) {					
+					throw new BusinessException("要添加的商品编号不存在!");
+				}
+				Start = df.format(FreshNetUtil.couponManager.loadFullSearch(number).get(0).getFulStart_date());	
+				
 			} catch (BaseException e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
+				JOptionPane.showMessageDialog(null, "满折编号不存在!","成功",JOptionPane.INFORMATION_MESSAGE);
 			}
 			String end = null;
 			try {
+				if(FreshNetUtil.couponManager.loadFullSearch(number)==null) {
+					throw new BusinessException("要添加的商品编号不存在!");
+				}
 				end = df.format(FreshNetUtil.couponManager.loadFullSearch(number).get(0).getFulEnd_date());
 			} catch (BaseException e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
+				JOptionPane.showMessageDialog(null, "满折编号不存在!","成功",JOptionPane.INFORMATION_MESSAGE);
 			}
 			ExamplecoupouManager sum = new ExamplecoupouManager();
 			try {
