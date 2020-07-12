@@ -60,7 +60,7 @@ public class FrmaddCom extends JDialog implements ActionListener{
 		workPane.add(labeldetails);
 		workPane.add(edtdetails);
 		this.getContentPane().add(workPane, BorderLayout.CENTER);
-		this.setSize(260, 400);
+		this.setSize(260, 420);
 		this.btnCancel.addActionListener(this);
 		this.btnOk.addActionListener(this);
 	}
@@ -84,7 +84,7 @@ public class FrmaddCom extends JDialog implements ActionListener{
 					JOptionPane.showMessageDialog(null, "添加成功","成功",JOptionPane.INFORMATION_MESSAGE);
 				}
 				else {
-					JOptionPane.showMessageDialog(null, "添加失败","错误",JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "该商品类别不存在!","错误",JOptionPane.ERROR_MESSAGE);
 				}
 			} catch (BaseException e1) {
 				JOptionPane.showMessageDialog(null, e1.getMessage(),"错误",JOptionPane.ERROR_MESSAGE);
