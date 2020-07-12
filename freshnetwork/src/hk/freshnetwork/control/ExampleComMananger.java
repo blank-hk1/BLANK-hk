@@ -129,6 +129,9 @@ public class ExampleComMananger implements IcomManager{
 		return fresh;
 	}
 	public Beancommodity_information regCom(String Trade_name,String category_number,String price,String member_price,String number,String Specifications,String details) throws BaseException{
+		if(Trade_name.equals("")||category_number.equals("")) {
+			throw new BusinessException("输入不能为空!");
+		}
 		Connection conn=null;
 		try {
 			conn=DBUtil.getConnection();
@@ -136,13 +139,22 @@ public class ExampleComMananger implements IcomManager{
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
 			pst.setString(1, Trade_name);
 			java.sql.ResultSet rs=pst.executeQuery();
-			if(rs.next()) throw new BusinessException("登陆账号已经存在");
+			if(rs.next()) throw new BusinessException("该商品已经存在");
 			rs.close();
 			pst.close();
 			int c=Integer.parseInt(category_number);
 			float p = Float.parseFloat(price);
 			float m = Float.parseFloat(member_price);
 			int n=Integer.parseInt(number);
+			sql = "select * from fresh_information where Category_number = ?";
+			pst=conn.prepareStatement(sql);
+			pst.setString(1, category_number);
+			rs=pst.executeQuery();
+			if(!rs.next()) {
+				throw new BusinessException("该类别编号不存在!");
+			}
+			rs.close();
+			pst.close();
 			sql="insert into commodity_information(Trade_name,Category_number,Price,Member_price,number,Specifications,details) values(?,?,?,?,?,?,?)";
 			pst=conn.prepareStatement(sql);
 			pst.setString(1, Trade_name);
@@ -196,6 +208,15 @@ public class ExampleComMananger implements IcomManager{
 			float p = Float.parseFloat(price);
 			float m = Float.parseFloat(member_price);
 			int n=Integer.parseInt(number);
+			sql = "select * from fresh_information where Category_number = ?";
+			pst=conn.prepareStatement(sql);
+			pst.setString(1, category_number);
+			rs=pst.executeQuery();
+			if(!rs.next()) {
+				throw new BusinessException("该类别编号不存在!");
+			}
+			rs.close();
+			pst.close();
 			sql="update commodity_information set Trade_name= ?,Category_number = ?,Price=?,Member_price=?,number=?,Specifications=?,details=? where Trade_number=?";
 			pst=conn.prepareStatement(sql);
 				pst.setString(1, Trade_name);
