@@ -8,6 +8,7 @@ import java.util.List;
 import hk.freshnetwork.itf.IcomManager;
 import hk.freshnetwork.model.Beancommodity_information;
 import hk.freshnetwork.model.Beanfresh_information;
+import hk.freshnetwork.model.Beanrecommend_menu;
 import hk.freshnetwork.ui.FrmFreshCom;
 import hk.freshnetwork.ui.FrmFreshcat;
 import hk.freshnetwork.util.BaseException;
@@ -36,6 +37,7 @@ public class ExampleComMananger implements IcomManager{
                 fr.setNumber(rs.getInt(7));
                 fr.setSpecifications(rs.getString(8));
                 fr.setDetails(rs.getString(9));
+                fr.setSaleNumber(rs.getInt(10));                
 				fresh.add(fr);
 			}
 		}catch (SQLException e) {
@@ -58,15 +60,20 @@ public class ExampleComMananger implements IcomManager{
 		Connection conn=null;
 		try {
 			conn=DBUtil.getConnection();
-			String sql = "select * from commodity_information where Trade_name = ?";	
+			String sql = "select * from commodity_information where Trade_name like ?";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
-			pst.setString(1, Trade_name);
+			pst.setString(1, "%"+Trade_name+"%");
 			java.sql.ResultSet rs=pst.executeQuery();			
 			while(rs.next()) {
 				Beancommodity_information com = new Beancommodity_information();
-				com.setTrade_name(Trade_name);
+				com.setTrade_number(rs.getInt(1));
+				com.setCategory_number(rs.getInt(3));
+				com.setTrade_name(rs.getString(4));
 				com.setPrice(rs.getFloat(5));
 				com.setMember_price(rs.getFloat(6));
+				com.setNumber(rs.getInt(7));
+				com.setDetails(rs.getString(9));
+				com.setSaleNumber(rs.getInt(10));
 				fresh.add(com);
 			}
 		}catch (SQLException e) {
@@ -103,6 +110,7 @@ public class ExampleComMananger implements IcomManager{
 				com.setMember_price(rs.getFloat(6));
 				com.setNumber(rs.getInt(7));
 				com.setDetails(rs.getString(8));
+				com.setSaleNumber(rs.getInt(10));
 				fresh.add(com);
 			}
 		}catch (SQLException e) {
@@ -215,13 +223,29 @@ public class ExampleComMananger implements IcomManager{
 		}
 		
 	}
-	public void deleteCom(String Trade_name){
+	public void deleteCom(String Trade_name) throws BusinessException{
 		Connection conn=null;
 		try {
-			String str = null;
 			conn=DBUtil.getConnection();
-			String sql="delete from commodity_information where Trade_name = ?";
+			String sql = "select * from commodity_information where Trade_name = ?";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.setString(1, Trade_name);
+			java.sql.ResultSet rs=pst.executeQuery();
+			if(rs.next()) {
+				String sql1 = "select * from shopping where Com_Trade_number = ?";
+				java.sql.PreparedStatement pst1=conn.prepareStatement(sql1);
+				pst1.setInt(1, rs.getInt(1));
+				java.sql.ResultSet rs1=pst1.executeQuery();
+				if(rs1.next()) {
+					throw new BusinessException("该商品无法删除!");
+				}
+				rs1.close();
+				pst1.close();
+			}
+			rs.close();
+			pst.close();
+			sql="delete from commodity_information where Trade_name = ?";
+			pst=conn.prepareStatement(sql);
 			pst.setString(1, Trade_name);
 			pst.execute();
 		    pst.close();
@@ -302,5 +326,57 @@ public class ExampleComMananger implements IcomManager{
 				}
 		}
 		return cx;
+	}
+	public List<Beancommodity_information> loadRec(int Trade_number){
+		List<Beancommodity_information> menu =new ArrayList<Beancommodity_information>();
+		Connection conn=null;
+		try {
+			conn=DBUtil.getConnection();
+			String sql = "select * from recommend_menu where Com_Trade_number = ?";		
+			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.setInt(1, Trade_number);
+			java.sql.ResultSet rs=pst.executeQuery();			
+			while(rs.next()) {
+				String sql1 = "select * from recommend_menu where Men_Menu_number = ?";
+				java.sql.PreparedStatement pst1=conn.prepareStatement(sql1);
+				pst1.setInt(1, rs.getInt(1));
+				java.sql.ResultSet rs1=pst1.executeQuery();
+				while (rs1.next()) {
+					System.out.println(rs1.getInt(1));
+					Beancommodity_information comm = new Beancommodity_information();
+					String sql2 = "select * from commodity_information where Trade_number = ?";
+					java.sql.PreparedStatement pst2=conn.prepareStatement(sql2);
+					pst2.setInt(1, rs1.getInt(2));
+					java.sql.ResultSet rs2=pst2.executeQuery();
+					while(rs2.next()) {
+						comm.setTrade_number(rs2.getInt(1));
+						comm.setCategory_number(rs2.getInt(3));
+						comm.setTrade_name(rs2.getString(4));
+						comm.setPrice(rs2.getFloat(5));
+						comm.setMember_price(rs2.getFloat(6));
+						comm.setDetails(rs2.getString(8));
+						menu.add(comm);
+					}					
+					rs2.close();
+					pst2.close();
+				}
+				rs1.close();
+				pst1.close();
+			}
+			rs.close();
+			pst.close();
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		finally{
+			if(conn!=null)
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+		return menu;
 	}
 }
