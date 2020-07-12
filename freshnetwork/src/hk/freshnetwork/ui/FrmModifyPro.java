@@ -23,7 +23,7 @@ public class FrmModifyPro extends JDialog implements ActionListener{
 	
 	private JButton btnOk = new JButton("修改限时促销");
 	private JButton btnCancel = new JButton("取消");	
-	private JLabel labelNameNow = new JLabel("当前限时促销编号"+FrmFreshTimepro.time_pros.getPro_number());
+	private JLabel labelNameNow = new JLabel("当前限时促销编号"+FrmFreshTimepro.time_pros.getPro_number()+"                       ");
 	private JLabel labelTrade = new JLabel("商品编号:");
 	private JLabel labelAppmoney = new JLabel("促销价格：");
 	private JLabel labelnumber = new JLabel("促销数量：");
@@ -95,11 +95,13 @@ public class FrmModifyPro extends JDialog implements ActionListener{
 			}
 				try {
 					FreshNetUtil.couponManager.modifyPro(FrmFreshTimepro.time_pros.getPro_number(), Trade, App_money,number, Start, end);
+					JOptionPane.showMessageDialog(null, "修改成功","成功",JOptionPane.INFORMATION_MESSAGE);
 				} catch (BaseException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, "要修改的商品编号不存在!","成功",JOptionPane.INFORMATION_MESSAGE);
 				}; 
-				JOptionPane.showMessageDialog(null, "修改成功","成功",JOptionPane.INFORMATION_MESSAGE);
+				
 				this.setVisible(false);
 			
 		}
