@@ -81,7 +81,7 @@ public class FrmChooseCoupon extends JDialog implements ActionListener{
 		// TODO Auto-generated method stub
 		if(e.getSource()==this.btnAdd){
 			FrmAddChoooseCoupon dlg=new FrmAddChoooseCoupon(this,"添加优惠券",true);
-			dlg.setVisible(false);
+			dlg.setVisible(true);
 			try {
 				this.reloadTable();
 			} catch (BaseException e1) {
