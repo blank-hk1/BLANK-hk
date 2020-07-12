@@ -62,6 +62,7 @@ public class ExampleOrderManager implements IOrderManager{
 		Connection conn=null;
 		try {
 			int t = 0,synumber=0;float dis= 0;
+			Timestamp start = null,end= null;
 			conn=DBUtil.getConnection();
 			String sql = "select * from relation where Com_Trade_number = ?";	
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);					
@@ -83,6 +84,8 @@ public class ExampleOrderManager implements IOrderManager{
                 if(rs.next()) {
                 	dis=rs.getFloat(4);
                 	synumber=rs.getInt(3);
+                	start=rs.getTimestamp(5);
+                	end=rs.getTimestamp(6);
                 }
                 rs.close();
                 pst.close();
@@ -103,19 +106,34 @@ public class ExampleOrderManager implements IOrderManager{
             }
             rs.close();
             pst.close();
+            Timestamp time = new java.sql.Timestamp(System.currentTimeMillis());
             if(flag==0) {
             	if(t!=0) {
-            		if(number>synumber) {
-            			sql="insert into shopping(Com_Trade_number,Ful_Full_number,pur_number,Discount,set_money,user_number) values (?,?,?,?,?,?)";
-                        pst=conn.prepareStatement(sql);
-                        pst.setInt(1, Trade_number);
-                        pst.setInt(2, t);
-                        pst.setInt(3, number);
-                        pst.setFloat(4, dis);
-                        pst.setFloat(5, number*money*dis);
-                        pst.setInt(6, Beanuser_table.currentLoginUser.getUser_num());
-                        pst.execute();
-                        pst.close();
+            		if(start.before(time)&&end.after(time)) {
+            			if(number>synumber) {
+                			sql="insert into shopping(Com_Trade_number,Ful_Full_number,pur_number,Discount,set_money,user_number) values (?,?,?,?,?,?)";
+                            pst=conn.prepareStatement(sql);
+                            pst.setInt(1, Trade_number);
+                            pst.setInt(2, t);
+                            pst.setInt(3, number);
+                            pst.setFloat(4, dis);
+                            pst.setFloat(5, number*money*dis);
+                            pst.setInt(6, Beanuser_table.currentLoginUser.getUser_num());
+                            pst.execute();
+                            pst.close();
+                		}
+                		else {
+                			sql="insert into shopping(Com_Trade_number,Ful_Full_number,pur_number,Discount,set_money,user_number) values (?,?,?,?,?,?)";
+                            pst=conn.prepareStatement(sql);
+                            pst.setInt(1, Trade_number);
+                            pst.setInt(2, t);
+                            pst.setInt(3, number);
+                            pst.setFloat(4, dis);
+                            pst.setFloat(5, number*money);
+                            pst.setInt(6, Beanuser_table.currentLoginUser.getUser_num());
+                            pst.execute();
+                            pst.close();
+                		}
             		}
             		else {
             			sql="insert into shopping(Com_Trade_number,Ful_Full_number,pur_number,Discount,set_money,user_number) values (?,?,?,?,?,?)";
@@ -129,6 +147,7 @@ public class ExampleOrderManager implements IOrderManager{
                         pst.execute();
                         pst.close();
             		}
+            		
             	}
             	else {           		
             		sql="insert into shopping(Com_Trade_number,Ful_Full_number,pur_number,Discount,set_money,user_number) values (?,?,?,?,?,?)";
@@ -145,14 +164,25 @@ public class ExampleOrderManager implements IOrderManager{
             }
             else {
             	if(t!=0) {
-            		if(number>synumber) {
-            			sql = "update shopping set pur_number = ?,set_money = ? where Com_Trade_number = ?";
-                    	pst=conn.prepareStatement(sql);
-                    	pst.setInt(1, number+num);
-                    	pst.setFloat(2, mon+number*money*dis);
-                    	pst.setInt(3, Trade_number);
-                    	pst.execute();
-                    	pst.close();
+            		if(start.before(time)&&end.after(time)) {
+            			if(number>synumber) {
+                			sql = "update shopping set pur_number = ?,set_money = ? where Com_Trade_number = ?";
+                        	pst=conn.prepareStatement(sql);
+                        	pst.setInt(1, number+num);
+                        	pst.setFloat(2, mon+number*money*dis);
+                        	pst.setInt(3, Trade_number);
+                        	pst.execute();
+                        	pst.close();
+                		}
+                		else {
+                			sql = "update shopping set pur_number = ?,set_money = ? where Com_Trade_number = ?";
+                        	pst=conn.prepareStatement(sql);
+                        	pst.setInt(1, number+num);
+                        	pst.setFloat(2, mon+number*money);
+                        	pst.setInt(3, Trade_number);
+                        	pst.execute();
+                        	pst.close();
+                		}
             		}
             		else {
             			sql = "update shopping set pur_number = ?,set_money = ? where Com_Trade_number = ?";
@@ -421,10 +451,11 @@ public class ExampleOrderManager implements IOrderManager{
 				Trade_number = rs.getInt(1);
 				pur_number = rs.getInt(2);
 				System.out.println(pur_number);
-				String sql1 = "update commodity_information set number = number-? where Trade_number = ?";
+				String sql1 = "update commodity_information set number = number- ? ,SaleNumber = SaleNumber + ? where Trade_number = ?";
 				java.sql.PreparedStatement pst1=conn.prepareStatement(sql1);
 				pst1.setInt(1, pur_number);
-				pst1.setInt(2, Trade_number);
+				pst1.setInt(2, pur_number);
+				pst1.setInt(3, Trade_number);
 				pst1.execute();
 				pst1.close();	
 			}						
@@ -560,7 +591,7 @@ public class ExampleOrderManager implements IOrderManager{
 			
 		}catch (SQLException e) {
 			e.printStackTrace();
-			throw new DbException(e);
+			throw new BusinessException("您已进行过评价");
 		}
 		finally{
 			if(conn!=null)
