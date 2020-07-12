@@ -55,6 +55,12 @@ public class ExampleAddressMannager implements IAddressManager{
 	}
 	public Beanaddlist regAdd(String qu,String address,String contacts,String con_phone) throws BaseException{
 		Connection conn=null;
+		if(qu.equals("")||address.equals("")||contacts.equals("")||con_phone.equals("")) {
+			throw new BusinessException("输入内容不能为空!");
+		}
+		if(con_phone.length()!=11) {
+			throw new BusinessException("联系电话应为11位!");
+		}	
 		try {
 			conn=DBUtil.getConnection();		
 			String sql="insert into add_list(User_num,sheng,shi,qu,address,contacts,con_phone) values(?,?,?,?,?,?,?)";
