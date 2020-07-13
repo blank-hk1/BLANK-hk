@@ -47,6 +47,10 @@ public class FrmOrderCom extends JDialog implements ActionListener{
 			this.setVisible(false);
 		else if(e.getSource()==this.btnOk){
 			int Trade_number=Integer.parseInt(this.edtDedmoney.getText());
+			if(Trade_number<=0) {
+				 JOptionPane.showMessageDialog(null, "购买数量必须为正数","错误",JOptionPane.INFORMATION_MESSAGE);
+				 return;
+			}
 			try {
 				Beantime_pro t =FreshNetUtil.orderManager.searchPro(FrmMain.details.getTrade_number());
 				if(t==null) {
@@ -86,10 +90,9 @@ public class FrmOrderCom extends JDialog implements ActionListener{
 				this.setVisible(false);
 			    JOptionPane.showMessageDialog(null, "添加成功","成功",JOptionPane.INFORMATION_MESSAGE);
 			} catch (BaseException e1) {
-				JOptionPane.showMessageDialog(null, e1.getMessage(),"错误",JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "添加错误","错误",JOptionPane.ERROR_MESSAGE);
 				return;
-			}
-			
+			}			
 		}
 	}
 }
