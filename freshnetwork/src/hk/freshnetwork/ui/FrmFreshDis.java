@@ -22,6 +22,7 @@ import javax.swing.table.DefaultTableModel;
 import hk.freshnetwork.action.FreshNetUtil;
 import hk.freshnetwork.model.Beanfull_sheet;
 import hk.freshnetwork.util.BaseException;
+import hk.freshnetwork.util.BusinessException;
 
 public class FrmFreshDis extends JDialog implements ActionListener{
 	private JPanel toolBar = new JPanel();
@@ -135,8 +136,15 @@ public class FrmFreshDis extends JDialog implements ActionListener{
 				return;
 			}
 			fulls=this.full.get(i);
-			FreshNetUtil.couponManager.deleteFul(fulls.getFull_number());
-			JOptionPane.showMessageDialog(null,  "删除满折信息成功","提示",JOptionPane.INFORMATION_MESSAGE);
+			try {
+				FreshNetUtil.couponManager.deleteFul(fulls.getFull_number());
+				JOptionPane.showMessageDialog(null,  "删除满折信息成功","提示",JOptionPane.INFORMATION_MESSAGE);
+			} catch (BusinessException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				JOptionPane.showMessageDialog(null,  "该满折已与商品连接无法删除!","提示",JOptionPane.INFORMATION_MESSAGE);
+			}
+			
 			this.reloadTable();
 		}
 		else if(e.getSource()==this.btnSearch){
