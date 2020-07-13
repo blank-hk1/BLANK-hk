@@ -17,4 +17,6 @@ public interface IcomManager {
 	public List<Beancommodity_information> searchComFresh(int Category_number) throws BaseException;
 	public float searchCuxiao(int Trade_number,float price);
 	public List<Beancommodity_information> loadRec(int Trade_number);
+	public float SearchPrice(int Trade_number);
+	public List<Beancommodity_information> searchComNumber(int Trade_number) throws BaseException;
 }
