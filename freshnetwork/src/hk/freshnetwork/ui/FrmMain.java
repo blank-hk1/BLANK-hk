@@ -266,6 +266,7 @@ public class FrmMain extends JFrame implements ActionListener {
 		    this.getContentPane().add(new JScrollPane(this.datacomPlan), BorderLayout.CENTER);
 		    this.getContentPane().add(new JScrollPane(this.dataOrdPlan), BorderLayout.EAST);
 		    this.reloadPlanTable();
+		    
 		    //状态栏
 		    //statusBar.setLayout(new FlowLayout(FlowLayout.RIGHT));
 		    //JLabel label=new JLabel("您好          "+Beanuser_table.currentLoginUser.getUser_name());//修改成   您好！+登陆用户名
