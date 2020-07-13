@@ -155,7 +155,7 @@ public class FrmFreshPurchase extends JDialog implements ActionListener{
 				return;
 			}
 			Purchases=this.Purchase.get(i);
-			FreshNetUtil.purchaseManager.deletePur(FrmFreshPurchase.Purchases.getChase_number());
+			FreshNetUtil.purchaseManager.deletePur(FrmFreshPurchase.Purchases.getChase_num());
 			JOptionPane.showMessageDialog(null,  "删除成功","提示",JOptionPane.INFORMATION_MESSAGE);
 			this.reloadTable();
 		}
