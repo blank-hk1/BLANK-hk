@@ -22,6 +22,7 @@ import javax.swing.table.DefaultTableModel;
 import hk.freshnetwork.action.FreshNetUtil;
 import hk.freshnetwork.model.Beantime_pro;
 import hk.freshnetwork.util.BaseException;
+import hk.freshnetwork.util.BusinessException;
 
 public class FrmFreshTimepro extends JDialog implements ActionListener{
 	private JPanel toolBar = new JPanel();
@@ -135,8 +136,15 @@ public class FrmFreshTimepro extends JDialog implements ActionListener{
 				return;
 			}
 			time_pros=this.time_pro.get(i);
-			FreshNetUtil.couponManager.deletePro(time_pros.getPro_number());
-			JOptionPane.showMessageDialog(null,  "删除限时促销信息成功","提示",JOptionPane.INFORMATION_MESSAGE);
+			try {
+				FreshNetUtil.couponManager.deletePro(time_pros.getPro_number());
+				JOptionPane.showMessageDialog(null,  "删除限时促销信息成功","提示",JOptionPane.INFORMATION_MESSAGE);
+			} catch (BusinessException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				JOptionPane.showMessageDialog(null,  "该促销与商品相连接无法删除!","提示",JOptionPane.INFORMATION_MESSAGE);
+			}
+			
 			this.reloadTable();
 		}
 		else if(e.getSource()==this.btnSearch){
