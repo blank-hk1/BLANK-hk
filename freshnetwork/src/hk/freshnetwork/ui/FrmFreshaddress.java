@@ -22,6 +22,7 @@ import javax.swing.table.DefaultTableModel;
 import hk.freshnetwork.action.FreshNetUtil;
 import hk.freshnetwork.model.Beanaddlist;
 import hk.freshnetwork.util.BaseException;
+import hk.freshnetwork.util.BusinessException;
 
 public class FrmFreshaddress extends JDialog implements ActionListener{
 	private JPanel toolBar = new JPanel();
@@ -119,8 +120,14 @@ public class FrmFreshaddress extends JDialog implements ActionListener{
 				return;
 			}
 			Addresslists=this.Addresslist.get(i);
-			FreshNetUtil.addressManager.deleteAdd(Addresslists.getAdd_number());;
-			JOptionPane.showMessageDialog(null,  "删除配送地址成功","提示",JOptionPane.INFORMATION_MESSAGE);
+			try {
+				FreshNetUtil.addressManager.deleteAdd(Addresslists.getAdd_number());
+				JOptionPane.showMessageDialog(null,  "删除配送地址成功","提示",JOptionPane.INFORMATION_MESSAGE);
+			} catch (BusinessException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+				JOptionPane.showMessageDialog(null,  "该地址已存在相连接的订单，无法删除!","提示",JOptionPane.INFORMATION_MESSAGE);
+			};
 			try {
 				this.reloadTable();
 			} catch (BaseException e1) {
