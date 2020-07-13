@@ -55,7 +55,11 @@ public class FrmAddFulCom extends JDialog implements ActionListener{
 			int Trade_number=Integer.parseInt(this.edtDedmoney.getText());
 			String Start = null;
 			try {
-				if(FreshNetUtil.couponManager.loadFullSearch(number)==null) {					
+				if(FreshNetUtil.couponManager.loadFullSearch(number)==null) {		
+					throw new BusinessException("要添加的满折编号不存在!");
+				}
+				if(FreshNetUtil.comManager.searchComNumber(Trade_number)==null) {
+					
 					throw new BusinessException("要添加的商品编号不存在!");
 				}
 				Start = df.format(FreshNetUtil.couponManager.loadFullSearch(number).get(0).getFulStart_date());	
@@ -63,7 +67,7 @@ public class FrmAddFulCom extends JDialog implements ActionListener{
 			} catch (BaseException e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
-				JOptionPane.showMessageDialog(null, "满折编号不存在!","成功",JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, "满折或商品编号不存在!","成功",JOptionPane.INFORMATION_MESSAGE);
 			}
 			String end = null;
 			try {
