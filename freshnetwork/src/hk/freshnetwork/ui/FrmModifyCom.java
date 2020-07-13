@@ -115,6 +115,10 @@ public class FrmModifyCom extends JDialog implements ActionListener{
 			if(details.equals("")) {
 				details=FrmFreshCom.COMS.getDetails();
 			}
+			if(Integer.parseInt(Price)<=Integer.parseInt(Member_price)) {
+				JOptionPane.showMessageDialog(null, "会员价不能高于原价!","错误",JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 				try {
 					FreshNetUtil.comManager.modifyCom(Trade_name, Category_number, Price, Member_price, number, specifications, details);
 					JOptionPane.showMessageDialog(null, "修改成功","成功",JOptionPane.INFORMATION_MESSAGE);
