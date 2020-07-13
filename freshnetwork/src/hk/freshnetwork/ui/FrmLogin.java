@@ -133,7 +133,6 @@ public class FrmLogin extends JDialog implements ActionListener {
 		} else if(e.getSource()==this.btnRegister){
 			FrmRegister dlg=new FrmRegister(this,"注册",true);
 			dlg.setVisible(true);
-			System.exit(0);
 		}
 	}
 
