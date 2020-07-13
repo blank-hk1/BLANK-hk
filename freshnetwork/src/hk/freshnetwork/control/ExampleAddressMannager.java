@@ -110,8 +110,6 @@ public class ExampleAddressMannager implements IAddressManager{
 			if(!rs.next()) {
 				throw new BusinessException("要修改的配送地址不存在");
 			}
-			rs.close();
-			pst.close();
 			sql="update add_list set qu= ?,address= ? ,contacts= ? , con_phone= ? where add_number=?";
 			pst=conn.prepareStatement(sql);
 				pst.setString(1, qu);
@@ -135,13 +133,22 @@ public class ExampleAddressMannager implements IAddressManager{
 				}
 		}
 	}
-	public void deleteAdd(int add_number){
+	public void deleteAdd(int add_number) throws BusinessException{
 		Connection conn=null;
 		try {
 			String str = null;
 			conn=DBUtil.getConnection();
-			String sql="delete from add_list where add_number = ?";
+			String sql="select * from order_form where add_number = ?";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.setInt(1, add_number);
+			java.sql.ResultSet rs=pst.executeQuery();
+			if(rs.next()) {
+				throw new BusinessException("该地址已存在相连接的订单，无法删除!");
+			}
+			rs.close();
+			pst.close();
+			sql="delete from add_list where add_number = ?";
+			pst=conn.prepareStatement(sql);
 			pst.setInt(1, add_number);
 			pst.execute();
 		    pst.close();
