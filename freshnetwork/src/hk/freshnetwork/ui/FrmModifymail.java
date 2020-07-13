@@ -27,7 +27,7 @@ public class FrmModifymail extends JDialog implements ActionListener{
 	
 	private JLabel labelmailOld = new JLabel("原邮箱地址："+Beanuser_table.currentLoginUser.getUser_mail()+"                              ");
 	private JLabel labelmail = new JLabel("新邮箱地址：");
-	private JPasswordField edtmail = new JPasswordField(14);
+	private JTextField edtmail = new JTextField(14);
 	public  FrmModifymail(Frame f, String s, boolean b) {
 		super(f, s, b);
 		toolBar.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -45,13 +45,13 @@ public class FrmModifymail extends JDialog implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {	
 		ExampleUserManager sum = new ExampleUserManager();
-		String mail=new String(this.edtmail.getPassword());
+		String mail=new String(this.edtmail.getText());
 		if(e.getSource()==this.btnCancel) {
 			this.setVisible(false);
 		}			
 		else if(e.getSource()==this.btnOk){
 			try {
-				FreshNetUtil.userManager.changemail(Beanuser_table.currentLoginUser,new String(edtmail.getPassword()));
+				FreshNetUtil.userManager.changemail(Beanuser_table.currentLoginUser,new String(edtmail.getText()));
 				Beanuser_table.currentLoginUser= FreshNetUtil.userManager.login(Beanuser_table.currentLoginUser.getUser_name(), Beanuser_table.currentLoginUser.getUser_pwd());
 				JOptionPane.showMessageDialog(null, "修改成功", "成功",JOptionPane.INFORMATION_MESSAGE);
 				this.setVisible(false);
