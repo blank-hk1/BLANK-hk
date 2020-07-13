@@ -202,13 +202,19 @@ public class ExamplecoupouManager implements IcoupouManager{
 		}
 		
 	}
-	public void deleteCou(int Cou_number){
+	public void deleteCou(int Cou_number) throws BusinessException{
 		Connection conn=null;
 		try {
-			String str = null;
 			conn=DBUtil.getConnection();
-			String sql="delete from coupon where Cou_number = ?";
+			String sql="select * from order_form where Cou_number = ?";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.setInt(1, Cou_number);
+			java.sql.ResultSet rs=pst.executeQuery();
+			if(rs.next()) {
+				throw new BusinessException("订单已使用优惠券无法删除!");
+			}
+			sql="delete from coupon where Cou_number = ?";
+			pst=conn.prepareStatement(sql);
 			pst.setInt(1, Cou_number);
 			pst.execute();
 		    pst.close();
@@ -424,13 +430,20 @@ public class ExamplecoupouManager implements IcoupouManager{
 		}
 		
 	}
-	public void deletePro(int Pro_number){
+	public void deletePro(int Pro_number) throws BusinessException{
 		Connection conn=null;
 		try {
 			String str = null;
 			conn=DBUtil.getConnection();
-			String sql="delete from time_pro where Pro_number = ?";
+			String sql="select * from commodity_information where Pro_number = ?";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.setInt(1, Pro_number);
+			java.sql.ResultSet rs=pst.executeQuery();
+			if(rs.next()) {
+				throw new BusinessException("订单已使用优惠券无法删除!");
+			}
+			sql="delete from time_pro where Pro_number = ?";
+			pst=conn.prepareStatement(sql);
 			pst.setInt(1, Pro_number);
 			pst.execute();
 		    pst.close();
@@ -483,7 +496,6 @@ public class ExamplecoupouManager implements IcoupouManager{
 	}
 	public List<Beanfull_sheet> loadFullSearch(int Full_number)throws BaseException{
 		List<Beanfull_sheet> Ful = new ArrayList<Beanfull_sheet>();
-		Ful=null;
 		Connection conn=null;
 		try {
 			conn=DBUtil.getConnection();
@@ -616,13 +628,19 @@ public class ExamplecoupouManager implements IcoupouManager{
 		}
 		
 	}
-	public void deleteFul(int Full_number){
+	public void deleteFul(int Full_number) throws BusinessException{
 		Connection conn=null;
 		try {
-			String str = null;
 			conn=DBUtil.getConnection();
-			String sql="delete from full_sheet where Full_number = ?";
+			String sql="select * from relation where Ful_Full_number = ?";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.setInt(1, Full_number);
+			java.sql.ResultSet rs=pst.executeQuery();
+			if(rs.next()) {
+				throw new BusinessException("该满折已与商品连接无法删除!");
+			}
+			sql="delete from full_sheet where Full_number = ?";
+			pst=conn.prepareStatement(sql);
 			pst.setInt(1, Full_number);
 			pst.execute();
 		    pst.close();
@@ -804,13 +822,14 @@ public class ExamplecoupouManager implements IcoupouManager{
 		}
 		
 	}
-	public void deleteFulCom(int Full_number){
+	public void deleteFulCom(int Full_number,int Trade_number){
 		Connection conn=null;
 		try {
 			conn=DBUtil.getConnection();
-			String sql="delete from relation where Ful_Full_number = ?";
+			String sql="delete from relation where Ful_Full_number = ? and Com_Trade_number = ?";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
 			pst.setInt(1, Full_number);
+			pst.setInt(2, Trade_number);
 			pst.execute();
 		    pst.close();
 		}catch (SQLException e) {
