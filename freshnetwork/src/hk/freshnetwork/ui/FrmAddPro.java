@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import hk.freshnetwork.action.FreshNetUtil;
 import hk.freshnetwork.control.ExamplecoupouManager;
 import hk.freshnetwork.model.Beancoupon;
 import hk.freshnetwork.model.Beantime_pro;
@@ -66,6 +67,10 @@ public class FrmAddPro extends JDialog implements ActionListener{
 			String Start = this.edtStart.getText();
 			String end = this.edtload.getText();
 			ExamplecoupouManager sum = new ExamplecoupouManager();
+			if(Pro_price>FreshNetUtil.comManager.SearchPrice(Trade_number)) {
+				JOptionPane.showMessageDialog(null, "促销价应低于会员价!","错误",JOptionPane.INFORMATION_MESSAGE);
+				return;
+			}
 			try {
 				Beantime_pro cou=sum.RegPro(Trade_number, Pro_price, Prom_number, Start, end);
 				if(cou!=null) {
@@ -74,6 +79,7 @@ public class FrmAddPro extends JDialog implements ActionListener{
 				}
 				else {
 					JOptionPane.showMessageDialog(null, "该商品编号不存在!","错误",JOptionPane.ERROR_MESSAGE);
+					return;
 				}
 			} catch (BaseException e1) {
 				JOptionPane.showMessageDialog(null, e1.getMessage(),"错误",JOptionPane.ERROR_MESSAGE);
