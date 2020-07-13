@@ -77,6 +77,10 @@ public class FrmaddCom extends JDialog implements ActionListener{
 			String Specifications = this.edtspecifications.getText();
 			String details = this.edtdetails.getText();
 			ExampleComMananger sum = new ExampleComMananger();
+			if(Integer.parseInt(Price)<=Integer.parseInt(Member_price)) {
+				JOptionPane.showMessageDialog(null, "会员价不能高于原价!","错误",JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 			try {
 				Beancommodity_information admin=sum.regCom(Trade_name, Category_number, Price, Member_price,number,Specifications,details);
 				if(admin!=null) {
@@ -85,6 +89,7 @@ public class FrmaddCom extends JDialog implements ActionListener{
 				}
 				else {
 					JOptionPane.showMessageDialog(null, "该商品类别不存在!","错误",JOptionPane.ERROR_MESSAGE);
+					return;
 				}
 			} catch (BaseException e1) {
 				JOptionPane.showMessageDialog(null, e1.getMessage(),"错误",JOptionPane.ERROR_MESSAGE);
