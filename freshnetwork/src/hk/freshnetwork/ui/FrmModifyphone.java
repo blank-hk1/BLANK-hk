@@ -27,7 +27,7 @@ public class FrmModifyphone extends JDialog implements ActionListener{
 	
 	private JLabel labelPhoneOld = new JLabel("原手机号码："+Beanuser_table.currentLoginUser.getUser_phone()+"                                ");
 	private JLabel labelPhone = new JLabel("新手机号码：");
-	private JPasswordField edtPhone = new JPasswordField(15);
+	private JTextField edtPhone = new JTextField(15);
 	public  FrmModifyphone(Frame f, String s, boolean b) {
 		super(f, s, b);
 		toolBar.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -45,13 +45,13 @@ public class FrmModifyphone extends JDialog implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		ExampleUserManager sum = new ExampleUserManager();
-		String phone=new String(this.edtPhone.getPassword());
+		String phone=new String(this.edtPhone.getText());
 		if(e.getSource()==this.btnCancel) {
 			this.setVisible(false);
 		}			
 		else if(e.getSource()==this.btnOk){
 			try {
-				FreshNetUtil.userManager.changephone(Beanuser_table.currentLoginUser,new String(edtPhone.getPassword()));
+				FreshNetUtil.userManager.changephone(Beanuser_table.currentLoginUser,new String(edtPhone.getText()));
 				Beanuser_table.currentLoginUser= FreshNetUtil.userManager.login(Beanuser_table.currentLoginUser.getUser_name(), Beanuser_table.currentLoginUser.getUser_pwd());
 				JOptionPane.showMessageDialog(null, "修改成功", "成功",JOptionPane.INFORMATION_MESSAGE);
 				this.setVisible(false);
