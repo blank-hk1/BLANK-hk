@@ -136,7 +136,7 @@ public class FrmDisCom extends JDialog implements ActionListener{
 				return;
 			}
 			Discoms=this.Discom.get(i);
-			FreshNetUtil.couponManager.deleteFulCom(Discoms.getFul_Full_number());
+			FreshNetUtil.couponManager.deleteFulCom(Discoms.getFul_Full_number(),Discoms.getCom_Trade_number());
 			JOptionPane.showMessageDialog(null,  "删除满折信息成功","提示",JOptionPane.INFORMATION_MESSAGE);
 			this.reloadTable();
 		}
