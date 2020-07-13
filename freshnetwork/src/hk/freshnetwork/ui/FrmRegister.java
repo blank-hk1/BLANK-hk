@@ -98,8 +98,8 @@ public class FrmRegister extends JDialog implements ActionListener {
 				}
 				Beanuser_table user=sum.reg(username,gender1,pwd1,pwd2, phone,mail, city);
 				if(user!=null) {
-					this.setVisible(false);
 					JOptionPane.showMessageDialog(null, "注册成功","成功",JOptionPane.INFORMATION_MESSAGE);
+					this.setVisible(false);
 				}
 				else {
 					JOptionPane.showMessageDialog(null, "注册失败","错误",JOptionPane.ERROR_MESSAGE);
