@@ -11,6 +11,7 @@ import hk.freshnetwork.model.Beanorder_form;
 import hk.freshnetwork.model.Beantime_pro;
 import hk.freshnetwork.util.BaseException;
 import hk.freshnetwork.util.BusinessException;
+import hk.freshnetwork.util.DbException;
 
 public interface IOrderManager {
 	public List<BeanShopping> loadOrd(int usernum)throws BaseException;
@@ -27,4 +28,5 @@ public interface IOrderManager {
 	public Beangoods_eva Addeva(int Usernum,int Tradenum,String content,int star) throws BaseException;
 	public void CreatDetails(int usernum);
 	public List<Beangoods_eva> Showeva(int Tradenum) throws BaseException;
+	//public void ReloadShop() throws BaseException;
 }
