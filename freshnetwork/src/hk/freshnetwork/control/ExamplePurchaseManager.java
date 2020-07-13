@@ -28,6 +28,7 @@ public class ExamplePurchaseManager implements IpurchaseManager{
 			java.sql.ResultSet rs=pst.executeQuery();					
 			while(rs.next()) {
 				Beanpurchase pur = new Beanpurchase();
+				pur.setChase_num(rs.getInt(1));
                 pur.setChase_number(rs.getInt(2));
                 pur.setTrade_number(rs.getInt(3));
                 pur.setEmp_number(rs.getInt(4));
@@ -150,7 +151,7 @@ public class ExamplePurchaseManager implements IpurchaseManager{
 		try {
 			String str = null;
 			conn=DBUtil.getConnection();
-			String sql="delete from purchase_list where chase_number = ?";
+			String sql="delete from purchase_list where chase_num = ?";
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
 			pst.setInt(1, chase_number);
 			pst.execute();
