@@ -4,7 +4,14 @@ public class Beanpurchase {
   public static final String[] tableTitles={"采购单编号","员工编号","采购数量","状态"};
   private int chase_number;
   private int Trade_number;
-  public int getTrade_number() {
+  private int chase_num;
+  public int getChase_num() {
+	return chase_num;
+}
+public void setChase_num(int chase_num) {
+	this.chase_num = chase_num;
+}
+public int getTrade_number() {
 	return Trade_number;
 }
 public void setTrade_number(int trade_number) {
