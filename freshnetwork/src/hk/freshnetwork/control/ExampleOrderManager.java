@@ -10,15 +10,18 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import hk.freshnetwork.action.FreshNetUtil;
 import hk.freshnetwork.itf.IOrderManager;
 import hk.freshnetwork.model.BeanShopping;
 import hk.freshnetwork.model.Beanaddlist;
+import hk.freshnetwork.model.Beancommodity_information;
 import hk.freshnetwork.model.Beancoupon;
 import hk.freshnetwork.model.Beangoods_eva;
 import hk.freshnetwork.model.Beanorder_details;
 import hk.freshnetwork.model.Beanorder_form;
 import hk.freshnetwork.model.Beantime_pro;
 import hk.freshnetwork.model.Beanuser_table;
+import hk.freshnetwork.ui.FrmMain;
 import hk.freshnetwork.util.BaseException;
 import hk.freshnetwork.util.BusinessException;
 import hk.freshnetwork.util.DBUtil;
@@ -95,9 +98,10 @@ public class ExampleOrderManager implements IOrderManager{
             }
             int flag=0,num = 0;
             float mon = 0;        
-            sql="select * from shopping where Com_Trade_number = ?";
+            sql="select * from shopping where Com_Trade_number = ? and user_number = ?";
             pst=conn.prepareStatement(sql);
             pst.setInt(1, Trade_number);
+            pst.setInt(2, Beanuser_table.currentLoginUser.getUser_num());
 			rs=pst.executeQuery();
             if(rs.next()) {
             	flag=1;
@@ -223,8 +227,9 @@ public class ExampleOrderManager implements IOrderManager{
 		Connection conn=null;
 		try {
 			conn=DBUtil.getConnection();
-			String sql = "select * from shopping";			
+			String sql = "select * from shopping where user_number = ?";			
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.setInt(1, Beanuser_table.currentLoginUser.getUser_num());
 			java.sql.ResultSet rs=pst.executeQuery();				
 			while(rs.next()) {
 				price = price + rs.getInt(5);
@@ -255,7 +260,6 @@ public class ExampleOrderManager implements IOrderManager{
 			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
 			pst.setInt(1,Trade_number);
 			java.sql.ResultSet rs=pst.executeQuery();
-			System.out.println(Trade_number);
 			if(rs.next()) {
 				xs.setPro_number(rs.getInt(1));
 				xs.setPro_price(rs.getFloat(3));
@@ -641,4 +645,112 @@ public class ExampleOrderManager implements IOrderManager{
 		}
 		return eva;
 	}
+	/*public void ReloadShop() throws BaseException {
+		Connection conn=null;
+		try {
+			conn=DBUtil.getConnection();
+			int[] Trade = null;
+			int[] Number = null;
+			int user=0;
+			//int t = 0,synumber=0;float dis= 0;
+			Beantime_pro tp = new Beantime_pro();
+			Beancommodity_information ci = new Beancommodity_information();
+			//Timestamp start = null,end= null;
+			String sql3 = "select distinct(user_number) from shopping";
+			java.sql.PreparedStatement pst3=conn.prepareStatement(sql3);
+			java.sql.ResultSet rs3=pst3.executeQuery();
+			while(rs3.next()) {
+				user=rs3.getInt(1);
+				String sql = "select * from shopping where user_number = ?";
+				java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+				pst.setInt(1, user);
+				java.sql.ResultSet rs=pst.executeQuery();
+				int i=0;
+				while(rs.next()) {
+					Trade[i]=rs.getInt(1);
+					Number[i]=rs.getInt(3);
+					i++;
+				}
+				rs.close();
+				pst.close();
+				sql="delete from shopping where user_number = ?";
+				pst=conn.prepareStatement(sql);
+				pst.setInt(1, user);
+				pst.execute();
+				for(i=0;i<Trade.length;i++) {
+					sql="select * from time_pro where Trade_number = ?";
+					pst=conn.prepareStatement(sql);
+					pst.setInt(1, Trade[i]);
+					rs=pst.executeQuery();
+					if(rs.next()) {
+						tp.setPro_number(rs.getInt(1));
+						tp.setProm_number(rs.getInt(4));
+						tp.setPro_price(rs.getFloat(3));
+						tp.setProStart_date(rs.getTimestamp(5));
+						tp.setProEnd_date(rs.getTimestamp(6));
+					}
+					rs.close();
+					pst.close();
+					sql="select * from commodity_information where Trade_number = ?";
+					pst=conn.prepareStatement(sql);
+					pst.setInt(1, Trade[i]);
+					rs=pst.executeQuery();
+					if(rs.next()) {
+						ci.setPrice(rs.getFloat(5));
+						ci.setMember_price(rs.getFloat(6));
+					}
+					rs.close();
+					pst.close();
+					if(tp==null) {
+						if(Beanuser_table.currentLoginUser.isISmember()==true) {
+	                        FreshNetUtil.orderManager.RegOrdDetails(FrmMain.details.getTrade_number(), Trade[i],ci.getMember_price());
+						}
+						else {
+							FreshNetUtil.orderManager.RegOrdDetails(FrmMain.details.getTrade_number(), Trade[i],ci.getPrice());
+						}
+					}
+					else {
+						Timestamp time = new java.sql.Timestamp(System.currentTimeMillis());
+						if(tp.getProStart_date().before(time)&&tp.getProEnd_date().after(time)) {
+							if(Trade[i]>tp.getProm_number()) {
+								FreshNetUtil.orderManager.RegOrdDetails(FrmMain.details.getTrade_number(), tp.getProm_number(),tp.getPro_price());
+								if(Beanuser_table.currentLoginUser.isISmember()) {
+									FreshNetUtil.orderManager.RegOrdDetails(FrmMain.details.getTrade_number(), Trade[i]-tp.getProm_number(),ci.getMember_price());
+								}
+								else {
+									FreshNetUtil.orderManager.RegOrdDetails(FrmMain.details.getTrade_number(), Trade[i]-tp.getProm_number(),ci.getPrice());
+								}
+								
+							}
+							else {
+								FreshNetUtil.orderManager.RegOrdDetails(FrmMain.details.getTrade_number(),Trade[i],tp.getPro_price());
+							}
+						}
+						else {
+							if(Beanuser_table.currentLoginUser.isISmember()) {
+								FreshNetUtil.orderManager.RegOrdDetails(FrmMain.details.getTrade_number(), Trade[i],ci.getMember_price());
+							}
+							else {
+								FreshNetUtil.orderManager.RegOrdDetails(FrmMain.details.getTrade_number(), Trade[i],ci.getPrice());
+							}
+						}
+					}
+				}
+			}
+			rs3.close();
+			pst3.close();
+		}catch (SQLException e) {
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+		finally{
+			if(conn!=null)
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+	}*/
 }
