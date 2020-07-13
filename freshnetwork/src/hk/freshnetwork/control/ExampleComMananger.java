@@ -91,6 +91,45 @@ public class ExampleComMananger implements IcomManager{
 		}
 		return fresh;
 	}
+	public List<Beancommodity_information> searchComNumber(int Trade_number) throws BaseException{
+		List<Beancommodity_information> fresh = new ArrayList<Beancommodity_information>();
+		Connection conn=null;
+		try {
+			conn=DBUtil.getConnection();
+			String sql = "select * from commodity_information where Trade_number = ?";
+			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.setInt(1, Trade_number);
+			java.sql.ResultSet rs=pst.executeQuery();			
+			while(rs.next()) {
+				Beancommodity_information com= new Beancommodity_information();
+				com.setTrade_number(rs.getInt(1));
+				com.setCategory_number(rs.getInt(3));
+				com.setTrade_name(rs.getString(4));
+				com.setPrice(rs.getFloat(5));
+				com.setMember_price(rs.getFloat(6));
+				com.setNumber(rs.getInt(7));
+				com.setDetails(rs.getString(9));
+				com.setSaleNumber(rs.getInt(10));
+				fresh.add(com);
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+			throw new DbException(e);
+		}
+		finally{
+			if(conn!=null)
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+		if(fresh.size()==0) {
+			return null;
+		}
+		return fresh;
+	}
 	public List<Beancommodity_information> searchComFresh(int Category_number)throws BaseException{
 		List<Beancommodity_information> fresh = new ArrayList<Beancommodity_information>();
 		Connection conn=null;
@@ -262,6 +301,42 @@ public class ExampleComMananger implements IcomManager{
 				}
 				rs1.close();
 				pst1.close();
+				sql1 = "select * from goods_eva where Com_Trade_number = ?";
+				pst1=conn.prepareStatement(sql1);
+				pst1.setInt(1, rs.getInt(1));
+				rs1=pst1.executeQuery();
+				if(rs1.next()) {
+					throw new BusinessException("该商品无法删除!");
+				}
+				rs1.close();
+				pst1.close();
+				sql1 = "select * from relation where Com_Trade_number = ?";
+				pst1=conn.prepareStatement(sql1);
+				pst1.setInt(1, rs.getInt(1));
+				rs1=pst1.executeQuery();
+				if(rs1.next()) {
+					throw new BusinessException("该商品无法删除!");
+				}
+				rs1.close();
+				pst1.close();
+				sql1 = "select * from order_details where Com_Trade_number = ?";
+				pst1=conn.prepareStatement(sql1);
+				pst1.setInt(1, rs.getInt(1));
+				rs1=pst1.executeQuery();
+				if(rs1.next()) {
+					throw new BusinessException("该商品无法删除!");
+				}
+				rs1.close();
+				pst1.close();
+				sql1 = "select * from time_pro where Trade_number = ?";
+				pst1=conn.prepareStatement(sql1);
+				pst1.setInt(1, rs.getInt(1));
+				rs1=pst1.executeQuery();
+				if(rs1.next()) {
+					throw new BusinessException("该商品无法删除!");
+				}
+				rs1.close();
+				pst1.close();
 			}
 			rs.close();
 			pst.close();
@@ -302,6 +377,7 @@ public class ExampleComMananger implements IcomManager{
                 fr.setNumber(rs.getInt(7));
                 fr.setSpecifications(rs.getString(8));
                 fr.setDetails(rs.getString(9));
+                fr.setSaleNumber(rs.getInt(10));
 				fresh.add(fr);
 			}
 		}catch (SQLException e) {
@@ -375,7 +451,9 @@ public class ExampleComMananger implements IcomManager{
 						comm.setTrade_name(rs2.getString(4));
 						comm.setPrice(rs2.getFloat(5));
 						comm.setMember_price(rs2.getFloat(6));
+						comm.setNumber(rs2.getInt(7));
 						comm.setDetails(rs2.getString(8));
+						comm.setSaleNumber(rs2.getInt(10));
 						menu.add(comm);
 					}					
 					rs2.close();
@@ -399,5 +477,33 @@ public class ExampleComMananger implements IcomManager{
 				}
 		}
 		return menu;
+	}
+	public float SearchPrice(int Trade_number) {
+		float price=0;
+		Connection conn=null;
+		try {
+			conn=DBUtil.getConnection();
+			String sql = "select * from commodity_information where Trade_number = ?";
+			java.sql.PreparedStatement pst=conn.prepareStatement(sql);
+			pst.setInt(1, Trade_number);
+			java.sql.ResultSet rs=pst.executeQuery();
+			if(rs.next()) {
+				price=rs.getFloat(6);
+			}
+			rs.close();
+			pst.close();
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		finally{
+			if(conn!=null)
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+		return price;
 	}
 }
