@@ -62,6 +62,15 @@ public class FrmAddCoupon extends JDialog implements ActionListener{
 			this.setVisible(false);
 		else if(e.getSource()==this.btnOk){
 			String content=this.edtcontent.getText();
+			if(this.edtAppmoney.getText().equals("")) {
+				JOptionPane.showMessageDialog(null, "输入不能为空!","错误",JOptionPane.ERROR_MESSAGE);
+			}
+			if(this.edtDedmoney.getText().equals("")) {
+				JOptionPane.showMessageDialog(null, "输入不能为空!","错误",JOptionPane.ERROR_MESSAGE);
+			}
+			if(this.edtload.getText().equals("")) {
+				JOptionPane.showMessageDialog(null, "输入不能为空!","错误",JOptionPane.ERROR_MESSAGE);
+			}
 			Float App_money=Float.parseFloat(this.edtAppmoney.getText());
 			Float Ded_money=Float.parseFloat(this.edtDedmoney.getText());
 			String Start = this.edtStart.getText();
@@ -74,7 +83,7 @@ public class FrmAddCoupon extends JDialog implements ActionListener{
 					JOptionPane.showMessageDialog(null, "添加成功","成功",JOptionPane.INFORMATION_MESSAGE);
 				}
 				else {
-					JOptionPane.showMessageDialog(null, "添加失败","错误",JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "输入不能为空!","错误",JOptionPane.ERROR_MESSAGE);
 				}
 			} catch (BaseException e1) {
 				JOptionPane.showMessageDialog(null, e1.getMessage(),"错误",JOptionPane.ERROR_MESSAGE);
