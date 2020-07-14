@@ -95,7 +95,7 @@ public class FrmModifyPro extends JDialog implements ActionListener{
 			}
 				try {
 					FreshNetUtil.couponManager.modifyPro(FrmFreshTimepro.time_pros.getPro_number(), Trade, App_money,number, Start, end);
-					//FreshNetUtil.orderManager.ReloadShop();
+					FreshNetUtil.orderManager.ReloadShop();
 					JOptionPane.showMessageDialog(null, "修改成功","成功",JOptionPane.INFORMATION_MESSAGE);
 				} catch (BaseException e1) {
 					// TODO Auto-generated catch block
