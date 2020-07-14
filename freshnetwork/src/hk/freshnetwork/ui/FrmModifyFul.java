@@ -28,7 +28,7 @@ public class FrmModifyFul extends JDialog implements ActionListener{
 	private JLabel labelAppmoney = new JLabel("适用商品数量：");
 	private JLabel labelDedmoney = new JLabel("折扣：");
 	private JLabel labelStart = new JLabel("开始日期：");
-	private JLabel labelload = new JLabel("持续时间(以月为单位)：");
+	private JLabel labelload = new JLabel("结束时间：");
 	private JTextField edtcontent= new JTextField(20);
 	private JTextField edtAppmoney = new JTextField(20);
 	private JTextField edtDedmoney = new JTextField(20);
