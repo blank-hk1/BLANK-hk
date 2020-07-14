@@ -55,6 +55,15 @@ public class FrmAddNum extends JDialog implements ActionListener{
 		if(e.getSource()==this.btnCancel)
 			this.setVisible(false);
 		else if(e.getSource()==this.btnOk){
+			if(this.edtUserId.getText().equals("")) {
+				JOptionPane.showMessageDialog(null, "输入不能为空!","错误",JOptionPane.ERROR_MESSAGE);
+			}
+			if(this.edtPwd.getText().equals("")) {
+				JOptionPane.showMessageDialog(null, "输入不能为空!","错误",JOptionPane.ERROR_MESSAGE);
+			}
+			if(this.edtPwd2.getText().equals("")) {
+				JOptionPane.showMessageDialog(null, "输入不能为空!","错误",JOptionPane.ERROR_MESSAGE);
+			}
 			int purnumber=Integer.parseInt(this.edtUserId.getText());
 			int Emp=Integer.parseInt(new String(this.edtPwd.getText()));
 			int chase=Integer.parseInt(new String(this.edtPwd2.getText()));
