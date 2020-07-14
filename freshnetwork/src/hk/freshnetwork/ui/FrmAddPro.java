@@ -61,6 +61,15 @@ public class FrmAddPro extends JDialog implements ActionListener{
 		if(e.getSource()==this.btnCancel)
 			this.setVisible(false);
 		else if(e.getSource()==this.btnOk){
+			if(this.edtcontent.getText().equals("")) {
+				JOptionPane.showMessageDialog(null, "输入不能为空!","错误",JOptionPane.ERROR_MESSAGE);
+			}
+			if(this.edtAppmoney.getText().equals("")) {
+				JOptionPane.showMessageDialog(null, "输入不能为空!","错误",JOptionPane.ERROR_MESSAGE);
+			}
+			if(this.edtDedmoney.getText().equals("")) {
+				JOptionPane.showMessageDialog(null, "输入不能为空!","错误",JOptionPane.ERROR_MESSAGE);
+			}
 			int Trade_number=Integer.parseInt(this.edtcontent.getText());
 			Float Pro_price=Float.parseFloat(this.edtAppmoney.getText());
 			int Prom_number=Integer.parseInt(this.edtDedmoney.getText());
