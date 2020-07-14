@@ -28,5 +28,6 @@ public interface IOrderManager {
 	public Beangoods_eva Addeva(int Usernum,int Tradenum,String content,int star) throws BaseException;
 	public void CreatDetails(int usernum);
 	public List<Beangoods_eva> Showeva(int Tradenum) throws BaseException;
-	//public void ReloadShop() throws BaseException;
+	public void ReloadShop() throws BaseException;
+	public void RegOrdDet(int userid,int Trade_number,int number,float money) throws BaseException;
 }
