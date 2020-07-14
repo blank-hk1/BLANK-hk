@@ -16,6 +16,7 @@ import hk.freshnetwork.control.ExamplecoupouManager;
 import hk.freshnetwork.model.Beanfull_sheet;
 import hk.freshnetwork.model.Beantime_pro;
 import hk.freshnetwork.util.BaseException;
+import hk.freshnetwork.util.BusinessException;
 
 public class FrmAddFull extends JDialog implements ActionListener{
 	private JPanel toolBar = new JPanel();
@@ -61,6 +62,9 @@ public class FrmAddFull extends JDialog implements ActionListener{
 			this.setVisible(false);
 		else if(e.getSource()==this.btnOk){
 			String content=this.edtcontent.getText();
+			if(this.edtAppmoney.getText().equals("")) {
+				JOptionPane.showMessageDialog(null, "输入不能为空!","错误",JOptionPane.ERROR_MESSAGE);
+			}
 			int number=Integer.parseInt(this.edtAppmoney.getText());
 			Float Prom_number=Float.parseFloat(this.edtDedmoney.getText());
 			String Start = this.edtStart.getText();
