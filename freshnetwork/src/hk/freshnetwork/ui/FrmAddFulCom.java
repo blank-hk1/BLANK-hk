@@ -51,6 +51,12 @@ public class FrmAddFulCom extends JDialog implements ActionListener{
 			this.setVisible(false);
 		else if(e.getSource()==this.btnOk){
 			SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd");
+			if(this.edtAppmoney.getText().equals("")) {
+				JOptionPane.showMessageDialog(null, "输入不能为空!","错误",JOptionPane.ERROR_MESSAGE);
+			}
+			if(this.edtDedmoney.getText().equals("")) {
+				JOptionPane.showMessageDialog(null, "输入不能为空!","错误",JOptionPane.ERROR_MESSAGE);
+			}
 			int number=Integer.parseInt(this.edtAppmoney.getText());
 			int Trade_number=Integer.parseInt(this.edtDedmoney.getText());
 			String Start = null;
