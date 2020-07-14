@@ -92,6 +92,9 @@ public class ExamplecoupouManager implements IcoupouManager{
 		return Cou;		
 	}
 	public Beancoupon RegCou(String content,float App_money,float Ded_money,String Start,int month) throws BaseException{
+		if(content.equals("")||App_money==0||Ded_money==0||Start.equals("")||month==0) {
+			throw new BusinessException("输入内容不能为空！");
+		}
 		Connection conn=null;
 		try {
 			conn=DBUtil.getConnection();
@@ -301,6 +304,9 @@ public class ExamplecoupouManager implements IcoupouManager{
 		return Time;		
 	}
 	public Beantime_pro RegPro(int Trade_number,float Pro_price,int Prom_number,String ProStart_date,String ProEnd_date) throws BaseException{
+		if(ProStart_date.equals("")||Trade_number==0||Pro_price==0||ProEnd_date.equals("")||Prom_number==0) {
+			throw new BusinessException("输入内容不能为空！");
+		}
 		Connection conn=null;
 		try {
 			conn=DBUtil.getConnection();
@@ -529,6 +535,9 @@ public class ExamplecoupouManager implements IcoupouManager{
 		return Ful;		
 	}
 	public Beanfull_sheet RegFul(String Full_content,int App_number,Float Discount,String FulStart_date,String FulEnd_date) throws BaseException{
+		if(Full_content.equals("")||App_number==0||Discount==0||FulStart_date.equals("")||FulEnd_date.equals("")) {
+			throw new BusinessException("输入内容不能为空！");
+		}
 		Connection conn=null;
 		try {
 			conn=DBUtil.getConnection();
@@ -612,7 +621,14 @@ public class ExamplecoupouManager implements IcoupouManager{
 				pst.setTimestamp(5, new java.sql.Timestamp(End_pro.getTime()));
 				pst.setInt(6, Full_number);
 				pst.execute();
-				pst.close();		
+				pst.close();
+			sql="update relation set FulStart_date = ?,FulEnd_date = ? where Ful_Full_number =?";
+			pst=conn.prepareStatement(sql);
+			pst.setTimestamp(1, new java.sql.Timestamp(Start_begin.getTime()));
+			pst.setTimestamp(2, new java.sql.Timestamp(End_pro.getTime()));
+			pst.setInt(3,Full_number);
+			pst.execute();
+			pst.close();
 		}catch (SQLException e) {
 			e.printStackTrace();
 			throw new DbException(e);
