@@ -24,7 +24,6 @@ import hk.freshnetwork.util.BaseException;
 
 public class FrmChooseCoupon extends JDialog implements ActionListener{
 	private JPanel toolBar = new JPanel();
-	private JButton btnAdd = new JButton("添加优惠券");
 	private JButton add = new JButton("选择优惠券");
 	private Object tblTitle[]=Beancoupon.tableTitles;
 	private Object tblData[][];
@@ -51,7 +50,6 @@ public class FrmChooseCoupon extends JDialog implements ActionListener{
 	public FrmChooseCoupon(FrmShopping frmShopping, String s, boolean b) throws BaseException {
 		super(frmShopping, s, b);
 		toolBar.setLayout(new FlowLayout(FlowLayout.LEFT));
-		toolBar.add(btnAdd);
 		toolBar.add(add);
 		
 		this.getContentPane().add(toolBar, BorderLayout.NORTH);
@@ -67,7 +65,6 @@ public class FrmChooseCoupon extends JDialog implements ActionListener{
 
 		this.validate();
 
-		this.btnAdd.addActionListener(this);
 		this.add.addActionListener(this);
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -79,17 +76,7 @@ public class FrmChooseCoupon extends JDialog implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getSource()==this.btnAdd){
-			FrmAddChoooseCoupon dlg=new FrmAddChoooseCoupon(this,"添加优惠券",true);
-			dlg.setVisible(true);
-			try {
-				this.reloadTable();
-			} catch (BaseException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
-		else if(e.getSource()==this.add) {
+		if(e.getSource()==this.add) {
 			int i=this.dataTable.getSelectedRow();
 			if(i<0) {
 				JOptionPane.showMessageDialog(null,  "请选择要配送的地址","提示",JOptionPane.ERROR_MESSAGE);
